@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>deFrame — Five minds. No frame.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Noto+Serif:wght@100&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>λ</text></svg>">
+<style>
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+:root {
+  --bg:#0A0A08; --surface:#111110; --surface2:#1A1A18;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.10);
+  --text:#EDEAE2; --muted:#7A7A72;
+}
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; max-width:480px; margin:0 auto; display:flex; flex-direction:column; }
+
+/* HEADER */
+header { padding:14px 20px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:0.5px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:100; }
+.wordmark { display:flex; align-items:baseline; gap:6px; text-decoration:none; }
+.wm-icon { font-size:16px; color:var(--text); opacity:0.7; }
+.wm-text { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; color:var(--text); }
+.wm-tag { font-size:9px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+.live-badge { display:flex; align-items:center; gap:5px; font-size:9px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+.live-dot { width:5px; height:5px; border-radius:50%; background:#FF3B3B; animation:livepulse 1.5s ease-in-out infinite; }
+@keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* TAGLINE */
+.tagline { padding:12px 20px; border-bottom:0.5px solid var(--border); font-family:'EB Garamond',serif; font-size:14px; font-style:italic; color:var(--muted); line-height:1.5; }
+
+/* SUBMIT */
+.submit-wrap { padding:12px 20px; border-bottom:0.5px solid var(--border); display:flex; gap:8px; }
+.submit-input { flex:1; background:var(--surface); border:0.5px solid var(--border2); border-radius:8px; padding:10px 14px; font-size:14px; font-family:'EB Garamond',serif; color:var(--text); outline:none; }
+.submit-input::placeholder { color:var(--muted); font-style:italic; }
+.submit-input:focus { border-color:rgba(255,255,255,0.2); }
+.submit-btn { background:var(--text); color:var(--bg); border:none; border-radius:8px; padding:10px 14px; font-size:11px; font-family:'Inter',sans-serif; letter-spacing:0.06em; cursor:pointer; white-space:nowrap; transition:opacity 0.15s; }
+.submit-btn:hover { opacity:0.85; }
+.submit-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+/* FEED */
+.feed { flex:1; display:flex; flex-direction:column; padding-bottom:80px; }
+
+/* CARD */
+.deframe-card { border-bottom:0.5px solid var(--border); display:flex; flex-direction:column; }
+
+/* CARD IMAGE */
+.card-img-wrap { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; }
+.card-img { width:100%; height:100%; object-fit:cover; display:block; filter:brightness(0.75); }
+.card-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%); }
+.card-img-meta { position:absolute; bottom:12px; left:14px; right:14px; }
+.card-img-source { font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.6); margin-bottom:5px; display:flex; justify-content:space-between; }
+.card-img-headline { font-family:'EB Garamond',serif; font-size:20px; line-height:1.3; color:#EDEAE2; font-weight:400; }
+
+/* CARD BODY */
+.card-body { padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
+
+/* SCORES */
+.scores-row { display:flex; gap:6px; }
+.score-chip { flex:1; background:var(--surface); border:0.5px solid var(--border); border-radius:6px; padding:8px 4px; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.chip-icon { font-size:11px; }
+.chip-num { font-family:'EB Garamond',serif; font-size:19px; line-height:1; }
+.chip-name { font-size:7.5px; color:var(--muted); letter-spacing:0.04em; text-transform:uppercase; }
+
+/* SIGNAL */
+.card-signal { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+.signal-text { font-size:12px; color:var(--muted); font-style:italic; line-height:1.45; flex:1; }
+.signal-spread { font-family:'EB Garamond',serif; font-size:14px; flex-shrink:0; padding-top:1px; }
+
+/* LEFT ACCENT */
+.card-body { border-left:2px solid var(--cc, #8A3A6A); }
+
+/* ACTIONS */
+.card-actions { display:flex; gap:8px; align-items:center; }
+.action-btn { background:none; border:0.5px solid var(--border2); color:var(--muted); font-size:10px; font-family:'Inter',sans-serif; letter-spacing:0.06em; text-transform:uppercase; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.15s; }
+.action-btn:hover { color:var(--text); border-color:rgba(255,255,255,0.25); }
+.action-btn.done { color:#3A7A4A; border-color:#3A7A4A; }
+.df-tag { font-size:10px; color:var(--muted); opacity:0.35; margin-left:auto; }
+
+/* SKELETON */
+.skel-card { border-bottom:0.5px solid var(--border); }
+.skel-img { width:100%; aspect-ratio:16/9; background:var(--surface); animation:skelanim 1.4s ease-in-out infinite; }
+.skel-body { padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
+.skel { height:12px; border-radius:4px; background:var(--surface2); animation:skelanim 1.4s ease-in-out infinite; }
+@keyframes skelanim { 0%,100%{opacity:0.35} 50%{opacity:0.9} }
+
+/* BOTTOM NAV */
+.bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:var(--bg); border-top:0.5px solid var(--border2); padding:10px 20px 20px; display:flex; justify-content:space-around; z-index:100; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; }
+.nav-icon { font-size:18px; }
+.nav-label { font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+.nav-item.active .nav-label { color:var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="wordmark" href="#">
+    <span class="wm-icon" style="font-family:'Noto Serif',serif;font-weight:100;font-size:20px;">λ</span>
+    <span class="wm-text">deFrame</span>
+    <span class="wm-tag">Beta</span>
+  </a>
+  <div class="live-badge"><div class="live-dot"></div>Live</div>
+</header>
+
+<div class="tagline">Five minds. No frame. Synthesize — don't consume.</div>
+
+<div class="submit-wrap">
+  <input type="text" class="submit-input" id="submit-input" placeholder="Paste any headline — deframe it..." autocomplete="off">
+  <button class="submit-btn" id="submit-btn" onclick="submitHeadline()">λ deFrame</button>
+</div>
+
+<div class="feed" id="feed">
+  <div class="skel-card">
+    <div class="skel-img"></div>
+    <div class="skel-body">
+      <div class="skel" style="width:100%;height:56px"></div>
+      <div class="skel" style="width:60%;animation-delay:0.1s"></div>
+    </div>
+  </div>
+  <div class="skel-card">
+    <div class="skel-img" style="animation-delay:0.1s"></div>
+    <div class="skel-body">
+      <div class="skel" style="width:100%;height:56px;animation-delay:0.1s"></div>
+      <div class="skel" style="width:55%;animation-delay:0.2s"></div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a class="nav-item active" href="#">
+    <span class="nav-icon" style="font-family:'Noto Serif',serif;font-weight:100;">λ</span>
+    <span class="nav-label">deFramed</span>
+  </a>
+  <a class="nav-item" href="https://votum.ink" target="_blank">
+    <span class="nav-icon">🗺</span>
+    <span class="nav-label">Votum.ink</span>
+  </a>
+  <a class="nav-item" href="https://votum.world" target="_blank">
+    <span class="nav-icon">λ</span>
+    <span class="nav-label">Votum.world</span>
+  </a>
+</div>
+
+<script>
+const MM = {
+  Claude:   { icon:'◈', color:'#3A5A8A' },
+  Grok:     { icon:'⚡', color:'#5A3A8A' },
+  ChatGPT:  { icon:'◯', color:'#3A7A4A' },
+  Gemini:   { icon:'✦', color:'#7A5A2A' },
+  DeepSeek: { icon:'⊕', color:'#8A4A3A' },
+};
+
+function sc(s) {
+  if (s >= 70) return '#5A9A6A';
+  if (s >= 50) return '#8A9A6A';
+  if (s >= 35) return '#9A7A4A';
+  return '#B85A5A';
+}
+
+function spreadColor(s) {
+  if (s < 15) return '#3A7A4A';
+  if (s < 30) return '#7A7A4A';
+  if (s < 45) return '#8A4A3A';
+  return '#8A3A6A';
+}
+
+function spreadLabel(s) {
+  if (s < 15) return 'Strong consensus';
+  if (s < 30) return 'Partial consensus';
+  if (s < 45) return 'Models debate this';
+  return 'Five minds, no consensus';
+}
+
+function timeAgo(d) {
+  const diff = Math.floor((Date.now()-new Date(d))/60000);
+  if (diff < 60) return diff+'m ago';
+  if (diff < 1440) return Math.floor(diff/60)+'h ago';
+  return Math.floor(diff/1440)+'d ago';
+}
+
+const SEEDS = [
+  {
+    headline: "US economy adds 250,000 jobs — but wage growth slows for third straight month",
+    source: "Reuters",
+    publishedAt: new Date(Date.now()-1800000).toISOString(),
+    image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+    models: [{model:'Claude',overall:83},{model:'ChatGPT',overall:80},{model:'Grok',overall:84},{model:'Gemini',overall:92},{model:'DeepSeek',overall:89}],
+    signal: 'Five minds agree — credible, well-sourced economic reporting.',
+    spreadVal: 12,
+  },
+  {
+    headline: "Biden's disastrous border policy has destroyed America",
+    source: "Breitbart",
+    publishedAt: new Date(Date.now()-3600000).toISOString(),
+    image: "https://images.unsplash.com/photo-1569982175971-d92b01cf8694?w=800&q=80",
+    models: [{model:'Claude',overall:16},{model:'ChatGPT',overall:25},{model:'Grok',overall:22},{model:'Gemini',overall:10},{model:'DeepSeek',overall:22}],
+    signal: 'All five agree — maximalist framing, zero evidence, advocacy not journalism.',
+    spreadVal: 15,
+  },
+  {
+    headline: "Israel commits genocide in Gaza as world looks away",
+    source: "The Intercept",
+    publishedAt: new Date(Date.now()-7200000).toISOString(),
+    image: "https://images.unsplash.com/photo-1647452457953-b9af46774bc5?w=800&q=80",
+    models: [{model:'Claude',overall:30},{model:'ChatGPT',overall:50},{model:'Grok',overall:34},{model:'Gemini',overall:23},{model:'DeepSeek',overall:33}],
+    signal: 'Contested legal claim as settled fact. DeepSeek alone rates center-left — divergence is signal.',
+    spreadVal: 27,
+  },
+  {
+    headline: "Republicans block life-saving healthcare for millions of Americans",
+    source: "Unknown",
+    publishedAt: new Date(Date.now()-10800000).toISOString(),
+    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+    models: [{model:'Claude',overall:20},{model:'ChatGPT',overall:58},{model:'Grok',overall:28},{model:'Gemini',overall:45},{model:'DeepSeek',overall:40}],
+    signal: 'Wide spread — Claude and Grok flag loaded language. Left perspective, contested framing.',
+    spreadVal: 38,
+  },
+  {
+    headline: "Climate change: the greatest hoax ever perpetrated on mankind",
+    source: "Unknown",
+    publishedAt: new Date(Date.now()-14400000).toISOString(),
+    image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
+    models: [{model:'Claude',overall:8},{model:'ChatGPT',overall:12},{model:'Grok',overall:15},{model:'Gemini',overall:5},{model:'DeepSeek',overall:18}],
+    signal: 'Near-zero unanimous scores. All five identify science denial with no supporting evidence.',
+    spreadVal: 13,
+  },
+];
+
+function buildCard(item) {
+  const sv = item.spreadVal || 0;
+  const cc = spreadColor(sv);
+  const div = document.createElement('div');
+  div.className = 'deframe-card';
+
+  const headlineEsc = (item.headline||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+
+  div.innerHTML = `
+    <div class="card-img-wrap">
+      <img class="card-img" src="${item.image||''}" alt="" loading="lazy"
+        onerror="this.parentElement.style.display='none'">
+      <div class="card-img-overlay"></div>
+      <div class="card-img-meta">
+        <div class="card-img-source">
+          <span>${item.source||'Unknown'}</span>
+          <span>${timeAgo(item.publishedAt)}</span>
+        </div>
+        <div class="card-img-headline">${item.headline||''}</div>
+      </div>
+    </div>
+    <div class="card-body" style="--cc:${cc}">
+      <div class="scores-row">
+        ${(item.models||[]).map(m=>{
+          const meta = MM[m.model]||{icon:'·',color:'#888'};
+          return `<div class="score-chip">
+            <span class="chip-icon" style="color:${meta.color}">${meta.icon}</span>
+            <span class="chip-num" style="color:${sc(m.overall)}">${m.overall}</span>
+            <span class="chip-name">${m.model.replace('ChatGPT','GPT').replace('DeepSeek','DS')}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="card-signal">
+        <div class="signal-text">${item.signal||spreadLabel(sv)}</div>
+        <div class="signal-spread" style="color:${cc}">±${sv}</div>
+      </div>
+      <div class="card-actions">
+        <button class="action-btn" onclick="shareCard(this,'${headlineEsc}',${sv},event)">Share</button>
+        <button class="action-btn" onclick="copyCard(this,'${headlineEsc}',${sv},event)">Copy</button>
+        <span class="df-tag">deframed.net</span>
+      </div>
+    </div>
+  `;
+  return div;
+}
+
+function shareCard(btn, headline, spread, e) {
+  e.stopPropagation();
+  const text = `"${headline}"\n\ndeFramed by 5 AI minds — spread ±${spread}\ndeframed.net`;
+  if (navigator.share) {
+    navigator.share({ title:'deFrame', text, url:'https://deframed.net' });
+  } else {
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent='Shared ✓'; btn.classList.add('done');
+      setTimeout(()=>{ btn.textContent='Share'; btn.classList.remove('done'); },2000);
+    });
+  }
+}
+
+function copyCard(btn, headline, spread, e) {
+  e.stopPropagation();
+  const text = `"${headline}"\n\ndeFramed by 5 AI minds — spread ±${spread}\ndeframed.net`;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied ✓'; btn.classList.add('done');
+    setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('done'); },2000);
+  });
+}
+
+async function submitHeadline() {
+  const input = document.getElementById('submit-input');
+  const btn = document.getElementById('submit-btn');
+  const headline = input.value.trim();
+  if (!headline) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Deframing...';
+
+  const feed = document.getElementById('feed');
+  const loadCard = document.createElement('div');
+  loadCard.className = 'skel-card';
+  loadCard.innerHTML = `
+    <div class="skel-img"></div>
+    <div class="skel-body">
+      <div style="font-family:'EB Garamond',serif;font-size:15px;color:var(--muted);padding-bottom:4px;">${headline}</div>
+      <div class="skel" style="height:56px"></div>
+      <div class="skel" style="width:60%;animation-delay:0.1s"></div>
+    </div>
+  `;
+  feed.insertBefore(loadCard, feed.firstChild);
+
+  try {
+    const res = await fetch('/.netlify/functions/analyze-multi', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ title:headline, source:'User submitted', description:'' })
+    });
+    const data = await res.json();
+    loadCard.remove();
+
+    if (data.models?.length) {
+      const overalls = data.models.map(m=>m.overall);
+      const sv = Math.max(...overalls)-Math.min(...overalls);
+      const item = {
+        headline,
+        source: 'deFramed',
+        publishedAt: new Date().toISOString(),
+        image: `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80`,
+        models: data.models,
+        signal: data.spread?.desc || spreadLabel(sv),
+        spreadVal: sv,
+      };
+      feed.insertBefore(buildCard(item), feed.firstChild);
+      input.value = '';
+    }
+  } catch(err) {
+    loadCard.remove();
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'λ deFrame';
+}
+
+document.getElementById('submit-input').addEventListener('keydown', e => {
+  if (e.key==='Enter') submitHeadline();
+});
+
+// Load live feed first, fall back to seeds
+async function loadLiveFeed() {
+  try {
+    const res = await fetch('https://votum.ink/.netlify/functions/deframed-feed');
+    const data = await res.json();
+    if (data.articles?.length) {
+      feed.innerHTML = '';
+      data.articles.slice(0, 15).forEach(a => {
+        feed.appendChild(buildCard({
+          id: a.url || Math.random().toString(),
+          headline: a.headline,
+          source: a.source,
+          publishedAt: a.publishedAt,
+          image: a.image,
+          models: [],
+          signal: '',
+          spreadVal: 0,
+        }));
+      });
+      return;
+    }
+  } catch(e) {}
+  // Fall back to seeds
+  SEEDS.forEach(s => feed.appendChild(buildCard(s)));
+}
+
+// Render seeds
+const feed = document.getElementById('feed');
+feed.innerHTML = '';
+SEEDS.forEach(s => feed.appendChild(buildCard(s)));
+loadLiveFeed();
+</script>
+</body>
+</html>

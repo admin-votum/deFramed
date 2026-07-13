@@ -354,10 +354,37 @@ document.getElementById('submit-input').addEventListener('keydown', e => {
   if (e.key==='Enter') submitHeadline();
 });
 
+// Load live feed first, fall back to seeds
+async function loadLiveFeed() {
+  try {
+    const res = await fetch('https://votum.ink/.netlify/functions/deframed-feed');
+    const data = await res.json();
+    if (data.articles?.length) {
+      feed.innerHTML = '';
+      data.articles.slice(0, 15).forEach(a => {
+        feed.appendChild(buildCard({
+          id: a.url || Math.random().toString(),
+          headline: a.headline,
+          source: a.source,
+          publishedAt: a.publishedAt,
+          image: a.image,
+          models: [],
+          signal: '',
+          spreadVal: 0,
+        }));
+      });
+      return;
+    }
+  } catch(e) {}
+  // Fall back to seeds
+  SEEDS.forEach(s => feed.appendChild(buildCard(s)));
+}
+
 // Render seeds
 const feed = document.getElementById('feed');
 feed.innerHTML = '';
 SEEDS.forEach(s => feed.appendChild(buildCard(s)));
+loadLiveFeed();
 </script>
 </body>
 </html>

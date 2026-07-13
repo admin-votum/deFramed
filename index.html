@@ -430,7 +430,7 @@ document.getElementById('submit-input').addEventListener('keydown', e => {
 // Load pre-analyzed feed — instant scores for everyone
 async function loadLiveFeed() {
   try {
-    const res = await fetch('https://votum.ink/.netlify/functions/get-feed');
+    const res = await fetch('https://votum.ink/.netlify/functions/generate-feed');
     const data = await res.json();
     if (data.articles?.length) {
       feed.innerHTML = '';

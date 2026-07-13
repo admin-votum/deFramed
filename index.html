@@ -231,8 +231,12 @@ const SEEDS = [
 function buildCard(item) {
   const sv = item.spreadVal || 0;
   const cc = spreadColor(sv);
+  const hasAnalysis = item.models && item.models.length > 0;
   const div = document.createElement('div');
   div.className = 'deframe-card';
+  div.dataset.url = item.url || '';
+  div.dataset.headline = item.headline || '';
+  div.dataset.source = item.source || '';
 
   const headlineEsc = (item.headline||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
 
@@ -250,20 +254,33 @@ function buildCard(item) {
       </div>
     </div>
     <div class="card-body" style="--cc:${cc}">
-      <div class="scores-row">
-        ${(item.models||[]).map(m=>{
+      ${!hasAnalysis ? `
+        <button class="action-btn" style="width:100%;justify-content:center;padding:10px;"
+          onclick="deframeCard(this)">λ deFrame this</button>
+      ` : `
+        <div class="scores-row">
+          ${(item.models||[]).map(m=>{
+            const meta = MM[m.model]||{icon:'·',color:'#888'};
+            return `<div class="score-chip">
+              <span class="chip-icon" style="color:${meta.color}">${meta.icon}</span>
+              <span class="chip-num" style="color:${sc(m.overall)}">${m.overall}</span>
+              <span class="chip-name">${m.model.replace('ChatGPT','GPT').replace('DeepSeek','DS')}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        ${(item.models||[]).map(m => {
           const meta = MM[m.model]||{icon:'·',color:'#888'};
-          return `<div class="score-chip">
-            <span class="chip-icon" style="color:${meta.color}">${meta.icon}</span>
-            <span class="chip-num" style="color:${sc(m.overall)}">${m.overall}</span>
-            <span class="chip-name">${m.model.replace('ChatGPT','GPT').replace('DeepSeek','DS')}</span>
+          if (!m.reasoning) return '';
+          return `<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:4px;">
+            <span style="font-size:10px;color:${meta.color};margin-top:2px;flex-shrink:0;">${meta.icon}</span>
+            <span style="font-size:11px;color:var(--muted);font-style:italic;line-height:1.5;">${m.reasoning}</span>
           </div>`;
         }).join('')}
-      </div>
-      <div class="card-signal">
-        <div class="signal-text">${item.signal||spreadLabel(sv)}</div>
-        <div class="signal-spread" style="color:${cc}">±${sv}</div>
-      </div>
+        <div class="card-signal">
+          <div class="signal-text">${item.signal||spreadLabel(sv)}</div>
+          <div class="signal-spread" style="color:${cc}">±${sv}</div>
+        </div>
+      `}
       <div class="card-actions">
         <button class="action-btn" onclick="shareCard(this,'${headlineEsc}',${sv},event)">Share</button>
         <button class="action-btn" onclick="copyCard(this,'${headlineEsc}',${sv},event)">Copy</button>
@@ -272,6 +289,62 @@ function buildCard(item) {
     </div>
   `;
   return div;
+}
+
+async function deframeCard(btn) {
+  const card = btn.closest('.deframe-card');
+  const headline = card.dataset.headline;
+  const url = card.dataset.url;
+  const source = card.dataset.source;
+
+  btn.textContent = 'Deframing...';
+  btn.disabled = true;
+
+  try {
+    let title = headline;
+    let description = '';
+
+    // Fetch article content if URL available
+    if (url) {
+      try {
+        const fetchRes = await fetch('https://votum.ink/.netlify/functions/fetch-article', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+        const fetchData = await fetchRes.json();
+        if (fetchData.bodyText) description = fetchData.bodyText;
+        if (fetchData.title) title = fetchData.title;
+      } catch(e) {}
+    }
+
+    const res = await fetch('https://votum.ink/.netlify/functions/analyze-multi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, description, source }),
+    });
+    const data = await res.json();
+
+    if (data.models?.length) {
+      const overalls = data.models.map(m => m.overall);
+      const sv = Math.max(...overalls) - Math.min(...overalls);
+      const newCard = buildCard({
+        id: url || headline,
+        headline: title,
+        source,
+        url,
+        publishedAt: new Date().toISOString(),
+        image: card.querySelector('.card-img')?.src || null,
+        models: data.models,
+        signal: data.spread?.desc || spreadLabel(sv),
+        spreadVal: sv,
+      });
+      card.replaceWith(newCard);
+    }
+  } catch(e) {
+    btn.textContent = 'λ deFrame this';
+    btn.disabled = false;
+  }
 }
 
 function shareCard(btn, headline, spread, e) {

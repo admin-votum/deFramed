@@ -3,79 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy — deFramed</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Noto+Serif:wght@100&display=swap" rel="stylesheet">
+<title>Privacy Policy — Votum</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'Inter',sans-serif; background:#0A0A08; color:#EDEAE2; max-width:680px; margin:0 auto; padding:48px 24px 80px; }
-header { display:flex; align-items:baseline; gap:8px; margin-bottom:48px; }
-.wm-icon { font-family:'Noto Serif',serif; font-weight:100; font-size:20px; opacity:0.7; }
-.wm-text { font-family:'EB Garamond',serif; font-size:22px; font-weight:500; }
-h1 { font-family:'EB Garamond',serif; font-size:32px; font-weight:500; margin-bottom:8px; }
-.updated { font-size:12px; color:#7A7A72; margin-bottom:40px; }
-h2 { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; margin:32px 0 12px; }
-p { font-size:14px; line-height:1.75; color:#A0A098; margin-bottom:16px; }
-ul { padding-left:20px; margin-bottom:16px; }
-li { font-size:14px; line-height:1.75; color:#A0A098; margin-bottom:6px; }
-a { color:#EDEAE2; }
-.footer { margin-top:48px; padding-top:24px; border-top:0.5px solid rgba(255,255,255,0.08); font-size:12px; color:#7A7A72; }
+:root {
+  --bg: #FAF8F4;
+  --text: #1A1A1A;
+  --muted: #7A7A72;
+  --border: rgba(0,0,0,0.08);
+  --accent: #2A3A5A;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-weight: 300;
+}
+.container { max-width: 720px; margin: 0 auto; padding: 60px 24px; }
+.wordmark { display:flex; align-items:baseline; gap:6px; margin-bottom:8px; }
+.lambda { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:var(--accent); }
+.wm-text { font-size:22px; font-weight:500; }
+.wm-sub { font-size:15px; color:var(--muted); }
+h1 { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:500; margin:32px 0 8px; }
+.updated { font-size:13px; color:var(--muted); margin-bottom:40px; }
+h2 { font-size:16px; font-weight:500; margin:36px 0 12px; color:var(--accent); }
+p { font-size:15px; margin-bottom:14px; color:#3A3A38; }
+ul { margin:0 0 14px 20px; }
+li { font-size:15px; margin-bottom:8px; color:#3A3A38; }
+a { color:var(--accent); }
+.footer { margin-top:60px; padding-top:24px; border-top:0.5px solid var(--border); font-size:13px; color:var(--muted); }
 </style>
 </head>
 <body>
+<div class="container">
+  <div class="wordmark">
+    <span class="lambda">λ</span>
+    <span class="wm-text">Votum</span>
+    <span class="wm-sub">· ink</span>
+  </div>
 
-<header>
-  <span class="wm-icon">λ</span>
-  <span class="wm-text">deFramed</span>
-</header>
+  <h1>Privacy Policy</h1>
+  <div class="updated">Last updated: July 2026</div>
 
-<h1>Privacy Policy</h1>
-<div class="updated">Last updated: July 11, 2026</div>
+  <h2>Overview</h2>
+  <p>Votum ("we", "our", the "App") is a political intelligence platform that provides polling data, electoral analysis, and AI-generated intelligence briefs about United States politics. This policy explains what information is processed when you use Votum on the web (votum.ink) or through our mobile applications.</p>
 
-<p>deFramed ("we", "our", or "the app") is committed to protecting your privacy. This policy explains what information we collect, how we use it, and what rights you have.</p>
+  <h2>Information We Do Not Collect</h2>
+  <p>Votum is designed for privacy:</p>
+  <ul>
+    <li>We do not require accounts or logins</li>
+    <li>We do not collect names, email addresses, or personal identifiers</li>
+    <li>We do not track your location</li>
+    <li>We do not sell or share any data with advertisers</li>
+    <li>We do not use third-party advertising or tracking SDKs</li>
+  </ul>
 
-<h2>What we collect</h2>
-<p>deFramed collects minimal data to function:</p>
-<ul>
-  <li><strong>Headlines you submit</strong> — when you submit a headline for analysis, it is sent to our server and forwarded to five AI models (Claude, Grok, ChatGPT, Gemini, DeepSeek) for evaluation. We do not store submitted headlines beyond the time needed to process and return results.</li>
-  <li><strong>Usage data</strong> — basic anonymous analytics such as app opens and feature usage may be collected by Expo (our build platform) and the device operating system. We do not collect personally identifiable information.</li>
-</ul>
+  <h2>AI-Generated Content</h2>
+  <p>Votum's intelligence briefs are generated using third-party artificial intelligence services. When you request an intelligence brief for a state, a request containing only publicly available political data (state name, polling averages, electoral information) is sent to one or more of the following AI providers:</p>
+  <ul>
+    <li>Anthropic (Claude) — <a href="https://www.anthropic.com/privacy">privacy policy</a></li>
+    <li>OpenAI (ChatGPT) — <a href="https://openai.com/privacy">privacy policy</a></li>
+    <li>Google (Gemini) — <a href="https://policies.google.com/privacy">privacy policy</a></li>
+    <li>DeepSeek — <a href="https://platform.deepseek.com/privacy">privacy policy</a></li>
+  </ul>
+  <p>No personal information about you is included in these requests. The AI providers process the political data request and return analysis. These requests are subject to each provider's API data handling policies.</p>
+  <p>AI-generated content is provided for informational purposes only. It reflects analysis generated by AI models and may contain inaccuracies. It does not constitute professional political, legal, or financial advice.</p>
 
-<h2>What we do not collect</h2>
-<ul>
-  <li>We do not collect your name, email, or any account information</li>
-  <li>We do not require registration or login</li>
-  <li>We do not track your location</li>
-  <li>We do not sell your data to third parties</li>
-  <li>We do not display advertisements</li>
-</ul>
+  <h2>News Content</h2>
+  <p>Votum displays political news headlines sourced from publicly available RSS feeds of established news organizations. Headlines may be analyzed by the AI providers listed above to generate credibility and framing scores. This analysis involves only the public headline text — no user data.</p>
 
-<h2>Third party AI services</h2>
-<p>When you submit a headline, it is processed by the following AI services. Each has its own privacy policy:</p>
-<ul>
-  <li>Anthropic (Claude) — anthropic.com/privacy</li>
-  <li>xAI (Grok) — x.ai/privacy</li>
-  <li>OpenAI (ChatGPT) — openai.com/privacy</li>
-  <li>Google (Gemini) — policies.google.com/privacy</li>
-  <li>DeepSeek — deepseek.com/privacy</li>
-</ul>
-<p>Headlines submitted are treated as API queries by these services according to their respective policies.</p>
+  <h2>Technical Data</h2>
+  <p>Our hosting providers (Netlify, Expo) may automatically log standard technical information such as IP addresses and request timestamps for security and operational purposes. This data is not used to identify or profile users and is subject to the providers' respective privacy policies.</p>
 
-<h2>Data retention</h2>
-<p>deFramed does not maintain a database of user submissions. Headlines submitted for analysis are processed in real time and are not stored on our servers beyond the duration of the API request.</p>
+  <h2>Children's Privacy</h2>
+  <p>Votum is intended for users aged 17 and older. We do not knowingly collect information from children.</p>
 
-<h2>Children's privacy</h2>
-<p>deFramed is not directed at children under 13. We do not knowingly collect information from children.</p>
+  <h2>Changes to This Policy</h2>
+  <p>We may update this policy as the product evolves. Material changes will be reflected on this page with an updated date.</p>
 
-<h2>Changes to this policy</h2>
-<p>We may update this policy from time to time. Changes will be posted at this URL with an updated date.</p>
+  <h2>Contact</h2>
+  <p>Questions about this policy or the product: <a href="mailto:hello@votum.ink">hello@votum.ink</a></p>
 
-<h2>Contact</h2>
-<p>Questions about this policy: <a href="mailto:hello@votum.ink">hello@votum.ink</a></p>
-
-<div class="footer">
-  λ deFramed · Five minds. No frame. · <a href="https://deframed.net">deframed.net</a>
+  <div class="footer">
+    λ Votum · ink — US Political Intelligence<br>
+    Part of the λ family: votum.ink · votum.world · deframed.net
+  </div>
 </div>
-
 </body>
 </html>

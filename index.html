@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>deFrame — Five minds. No frame.</title>
+<title>deFramed — Five minds. No frame.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Noto+Serif:wght@100&display=swap" rel="stylesheet">
@@ -98,7 +98,7 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
 <header>
   <a class="wordmark" href="#">
     <span class="wm-icon" style="font-family:'Noto Serif',serif;font-weight:100;font-size:20px;">λ</span>
-    <span class="wm-text">deFrame</span>
+    <span class="wm-text">deFramed</span>
   </a>
   <div class="live-badge"><div class="live-dot"></div>Live</div>
 </header>
@@ -362,7 +362,7 @@ function shareCard(btn, headline, spread, e) {
   e.stopPropagation();
   const text = `"${headline}"\n\ndeFramed by 5 AI minds — spread ±${spread}\ndeframed.net`;
   if (navigator.share) {
-    navigator.share({ title:'deFrame', text, url:'https://deframed.net' });
+    navigator.share({ title:'deFramed', text, url:'https://deframed.net' });
   } else {
     navigator.clipboard.writeText(text).then(()=>{
       btn.textContent='Shared ✓'; btn.classList.add('done');

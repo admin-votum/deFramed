@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>deFramed — Five minds. No frame.</title>
+<title>deFramed — Five intelligences. No frame.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Noto+Serif:wght@100&display=swap" rel="stylesheet">
@@ -22,6 +22,7 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
 .wordmark { display:flex; align-items:baseline; gap:6px; text-decoration:none; }
 .wm-icon { font-size:16px; color:var(--text); opacity:0.7; }
 .wm-text { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; color:var(--text); }
+.brand-f { color:#D96B2B; }
 .wm-tag { font-size:9px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
 .live-badge { display:flex; align-items:center; gap:5px; font-size:9px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
 .live-dot { width:5px; height:5px; border-radius:50%; background:#FF3B3B; animation:livepulse 1.5s ease-in-out infinite; }
@@ -63,6 +64,32 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
 .chip-num { font-family:'EB Garamond',serif; font-size:19px; line-height:1; }
 .chip-name { font-size:7.5px; color:var(--muted); letter-spacing:0.04em; text-transform:uppercase; }
 
+/* LENS LAYERS */
+.lens-box { border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:4px; }
+.lens-label { font-size:9px; text-transform:uppercase; letter-spacing:0.1em; }
+.lens-note { font-size:10px; color:var(--muted); font-style:italic; line-height:1.4; }
+.lens-text { font-family:'EB Garamond',serif; font-size:16px; line-height:1.4; color:var(--text); }
+.deframed-box { background:rgba(90,154,106,0.08); border-left:2px solid #5A9A6A; }
+.deframed-box .lens-label { color:#5A9A6A; }
+.reframe-box { background:rgba(138,106,171,0.10); border-left:2px solid #9A8ACB; }
+.reframe-box .lens-label { color:#B5A5E0; }
+.reader-question { background:rgba(255,255,255,0.04); border-left:2px solid var(--border2); border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:4px; }
+.reader-question .lens-label { color:var(--muted); }
+.reader-question .lens-text { font-size:15px; }
+.analysis-details { border-top:0.5px solid var(--border); border-bottom:0.5px solid var(--border); padding:8px 0; }
+.analysis-details summary { color:var(--muted); cursor:pointer; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; list-style:none; }
+.analysis-details summary::-webkit-details-marker { display:none; }
+.analysis-details summary::before { content:'+'; display:inline-block; width:15px; color:var(--text); }
+.analysis-details[open] summary::before { content:'−'; }
+.analysis-details .scores-row { margin-top:8px; }
+.deep-dive { border-top:0.5px solid var(--border); padding-top:8px; }
+.deep-dive-toggle { background:none; border:0; color:var(--muted); cursor:pointer; font-size:10px; letter-spacing:0.08em; padding:0; text-align:left; text-transform:uppercase; }
+.deep-dive-toggle::before { content:'+'; display:inline-block; width:15px; color:var(--text); }
+.deep-dive-toggle[aria-expanded="true"]::before { content:'−'; }
+.deep-dive-body { color:var(--muted); font-size:12px; line-height:1.65; margin-top:9px; white-space:pre-line; }
+.deep-dive-note { color:var(--muted); font-size:9px; font-style:italic; margin-top:7px; opacity:0.75; }
+.deep-dive-signature { color:#D96B2B; font-size:10px; letter-spacing:0.05em; margin-top:10px; text-align:right; }
+
 /* SIGNAL */
 .card-signal { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
 .signal-text { font-size:12px; color:var(--muted); font-style:italic; line-height:1.45; flex:1; }
@@ -70,6 +97,12 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
 
 /* LEFT ACCENT */
 .card-body { border-left:2px solid var(--cc, #8A3A6A); }
+
+/* ARTICLE PREVIEW */
+.article-preview { border-top:0.5px solid var(--border); padding-top:10px; }
+.article-preview-label { color:var(--muted); font-size:9px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
+.article-preview-text { color:var(--text); font-family:'EB Garamond',serif; font-size:16px; line-height:1.45; }
+.article-preview-link { display:inline-block; color:var(--muted); font-size:10px; margin-top:9px; text-decoration:none; border-bottom:0.5px solid var(--border2); padding-bottom:2px; }
 
 /* ACTIONS */
 .card-actions { display:flex; gap:8px; align-items:center; }
@@ -98,16 +131,16 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
 <header>
   <a class="wordmark" href="#">
     <span class="wm-icon" style="font-family:'Noto Serif',serif;font-weight:100;font-size:20px;">λ</span>
-    <span class="wm-text">deFramed</span>
+    <span class="wm-text">de<span class="brand-f">F</span>ramed</span>
   </a>
   <div class="live-badge"><div class="live-dot"></div>Live</div>
 </header>
 
-<div class="tagline">Five minds. No frame. Synthesize — don't consume.</div>
+<div class="tagline">Five intelligences. No frame. Synthesize — don't consume.</div>
 
 <div class="submit-wrap">
   <input type="text" class="submit-input" id="submit-input" placeholder="Paste any headline — deframe it..." autocomplete="off">
-  <button class="submit-btn" id="submit-btn" onclick="submitHeadline()">λ deFrame</button>
+  <button class="submit-btn" id="submit-btn" onclick="submitHeadline()">λ de<span class="brand-f">F</span>rame</button>
 </div>
 
 <div class="feed" id="feed">
@@ -143,7 +176,7 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
 <div class="bottom-nav">
   <a class="nav-item active" href="#">
     <span class="nav-icon" style="font-family:'Noto Serif',serif;font-weight:100;">λ</span>
-    <span class="nav-label">deFramed</span>
+    <span class="nav-label">de<span class="brand-f">F</span>ramed</span>
   </a>
   <a class="nav-item" href="https://votum.ink" target="_blank">
     <span class="nav-icon">🗺</span>
@@ -163,6 +196,23 @@ const MM = {
   DeepSeek: { icon:'⊕', color:'#8A4A3A' },
 };
 
+const LIVE_FEED_ENDPOINT = 'https://votum.ink/.netlify/functions/universe-feed';
+const DEEP_DIVE_ANALYSTS = ['Claude', 'ChatGPT', 'Gemini', 'DeepSeek'];
+let deepDiveAnalystCursor = 0;
+
+function nextDeepDiveAnalyst(card) {
+  const available = new Set((card?.dataset.analysts || '').split(',').filter(Boolean));
+  for (let step = 0; step < DEEP_DIVE_ANALYSTS.length; step++) {
+    const index = (deepDiveAnalystCursor + step) % DEEP_DIVE_ANALYSTS.length;
+    const analyst = DEEP_DIVE_ANALYSTS[index];
+    if (!available.size || available.has(analyst)) {
+      deepDiveAnalystCursor = (index + 1) % DEEP_DIVE_ANALYSTS.length;
+      return analyst;
+    }
+  }
+  return DEEP_DIVE_ANALYSTS[deepDiveAnalystCursor++ % DEEP_DIVE_ANALYSTS.length];
+}
+
 function sc(s) {
   if (s >= 70) return '#5A9A6A';
   if (s >= 50) return '#8A9A6A';
@@ -178,10 +228,10 @@ function spreadColor(s) {
 }
 
 function spreadLabel(s) {
-  if (s < 15) return 'Strong consensus';
-  if (s < 30) return 'Partial consensus';
-  if (s < 45) return 'Models debate this';
-  return 'Five minds, no consensus';
+  if (s < 15) return 'Intelligences converge';
+  if (s < 30) return 'Intelligences mostly agree';
+  if (s < 45) return 'Intelligences debate this';
+  return 'Intelligences diverge — reader decides';
 }
 
 function timeAgo(d) {
@@ -191,6 +241,47 @@ function timeAgo(d) {
   return Math.floor(diff/1440)+'d ago';
 }
 
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>'"]/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[character]));
+}
+
+function decodeArticleText(value) {
+  return String(value || '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/\s+/g, ' ');
+}
+
+function deepDiveFor(item, kind) {
+  const explicit = kind === 'deFramed' ? item.deframedDeepDive : item.reframeDeepDive;
+  if (explicit) return explicit;
+
+  if (kind === 'deFramed') {
+    return `${item.deframedHeadline} This version keeps the direct claim while removing the headline's strongest emotional or argumentative packaging. It is not a fact check and it does not establish whether the claim is true. It gives the reader a cleaner object to examine: what happened, who is involved, and what the source is asking the reader to accept. The next step is to compare the wording with the article's evidence, time period, and omitted context.`;
+  }
+
+  return `${item.reframe} This perspective asks what the wording makes most visible and what it leaves outside the frame. It is an analytical reading, not a replacement headline and not a verdict. The purpose is to make the angle easier to notice before the reader decides whether the framing is fair, useful, or persuasive. Where the intelligences disagree, that disagreement belongs in the reading rather than being averaged away.`;
+}
+
+function toggleDeepDive(button, kind) {
+  const body = button.nextElementSibling;
+  if (!body) return;
+  const expanded = button.getAttribute('aria-expanded') === 'true';
+  if (!expanded && !body.dataset.author) {
+    const signature = body.querySelector('.deep-dive-signature');
+    const analyst = nextDeepDiveAnalyst(button.closest('.deframe-card'));
+    body.dataset.author = analyst;
+    if (signature) signature.textContent = `— ${analyst}`;
+  }
+  button.setAttribute('aria-expanded', String(!expanded));
+  body.hidden = expanded;
+  button.textContent = expanded ? `Read full ${kind} analysis` : 'Hide full analysis';
+}
+
 const SEEDS = [
   {
     headline: "US economy adds 250,000 jobs — but wage growth slows for third straight month",
@@ -198,8 +289,11 @@ const SEEDS = [
     publishedAt: new Date(Date.now()-1800000).toISOString(),
     image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
     models: [{model:'Claude',overall:83},{model:'ChatGPT',overall:80},{model:'Gemini',overall:92},{model:'DeepSeek',overall:89}],
-    signal: 'Five minds agree — credible, well-sourced economic reporting.',
+    signal: 'Intelligences converge — credible, well-sourced economic reporting.',
     spreadVal: 12,
+    deframedHeadline: 'The US economy added 250,000 jobs while wage growth slowed for a third consecutive month.',
+    reframe: 'The wording puts a strong employment gain beside a weaker wage signal, inviting the reader to ask who is benefiting from the growth.',
+    readerQuestion: 'Are the wage figures adjusted for inflation, and which workers are included?',
   },
   {
     headline: "Biden's disastrous border policy has destroyed America",
@@ -207,8 +301,11 @@ const SEEDS = [
     publishedAt: new Date(Date.now()-3600000).toISOString(),
     image: "https://images.unsplash.com/photo-1569982175971-d92b01cf8694?w=800&q=80",
     models: [{model:'Claude',overall:16},{model:'ChatGPT',overall:25},{model:'Gemini',overall:10},{model:'DeepSeek',overall:22}],
-    signal: 'All five agree — maximalist framing, zero evidence, advocacy not journalism.',
+    signal: 'The intelligences converge — maximalist framing, zero evidence, advocacy not journalism.',
     spreadVal: 15,
+    deframedHeadline: 'The headline presents a negative assessment of Biden-era border policy and its effects on the United States.',
+    reframe: 'Words such as “disastrous” and “destroyed” turn a policy disagreement into a totalizing verdict before the reader sees the underlying measures.',
+    readerQuestion: 'Which outcomes and time period are being used to support this conclusion?',
   },
   {
     headline: "Israel commits genocide in Gaza as world looks away",
@@ -218,6 +315,9 @@ const SEEDS = [
     models: [{model:'Claude',overall:30},{model:'ChatGPT',overall:50},{model:'Gemini',overall:23},{model:'DeepSeek',overall:33}],
     signal: 'Contested legal claim as settled fact. DeepSeek alone rates center-left — divergence is signal.',
     spreadVal: 27,
+    deframedHeadline: 'The headline says that Israel’s actions in Gaza amount to genocide and describes the wider world as failing to respond.',
+    reframe: 'The headline combines a serious legal classification with a moral accusation, leaving the reader to separate the underlying conduct, the legal standard, and the judgment.',
+    readerQuestion: 'What legal definition and evidence does the article use for the classification?',
   },
   {
     headline: "Republicans block life-saving healthcare for millions of Americans",
@@ -227,6 +327,9 @@ const SEEDS = [
     models: [{model:'Claude',overall:20},{model:'ChatGPT',overall:58},{model:'Gemini',overall:45},{model:'DeepSeek',overall:40}],
     signal: 'Wide spread — Claude flags loaded language. Left perspective, contested framing.',
     spreadVal: 38,
+    deframedHeadline: 'The headline says that Republican lawmakers blocked healthcare legislation that supporters say would save millions of lives.',
+    reframe: '“Life-saving” and “for millions” present the policy outcome through its supporters’ strongest moral and numerical case, while the opposing rationale is absent.',
+    readerQuestion: 'What provision was blocked, and how was the estimate of lives affected calculated?',
   },
   {
     headline: "Climate change: the greatest hoax ever perpetrated on mankind",
@@ -236,6 +339,9 @@ const SEEDS = [
     models: [{model:'Claude',overall:8},{model:'ChatGPT',overall:12},{model:'Gemini',overall:5},{model:'DeepSeek',overall:18}],
     signal: 'Near-zero unanimous scores. All five identify science denial with no supporting evidence.',
     spreadVal: 13,
+    deframedHeadline: 'The headline describes climate change as a deliberately fabricated claim.',
+    reframe: '“Greatest hoax” is a categorical dismissal rather than a description of evidence, so the framing asks the reader to accept the conclusion before examining the record.',
+    readerQuestion: 'What specific evidence is being offered, and how does it address the established measurements?',
   },
 ];
 
@@ -248,8 +354,18 @@ function buildCard(item) {
   div.dataset.url = item.url || '';
   div.dataset.headline = item.headline || '';
   div.dataset.source = item.source || '';
+  div.dataset.analysts = (item.models || [])
+    .filter(m => m && !m.abstained && m.status !== 'abstained')
+    .map(m => m.model)
+    .filter(name => DEEP_DIVE_ANALYSTS.includes(name))
+    .join(',');
 
   const headlineEsc = (item.headline||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  const deframedHeadline = escapeHtml(item.deframedHeadline || '');
+  const reframe = escapeHtml(item.reframe || '');
+  const readerQuestion = escapeHtml(item.readerQuestion || '');
+  const deframedDeepDive = escapeHtml(deepDiveFor(item, 'deFramed'));
+  const reframeDeepDive = escapeHtml(deepDiveFor(item, 'reFrame'));
 
   div.innerHTML = `
     <div class="card-img-wrap">
@@ -265,20 +381,27 @@ function buildCard(item) {
       </div>
     </div>
     <div class="card-body" style="--cc:${cc}">
+      ${item.url ? `
+        <button class="action-btn" style="align-self:flex-start;" onclick="loadArticle(this)">Load article</button>
+        <div class="article-preview" hidden></div>
+      ` : ''}
       ${!hasAnalysis ? `
         <button class="action-btn" style="width:100%;justify-content:center;padding:10px;"
-          onclick="deframeCard(this)">λ deFrame this</button>
+          onclick="deframeCard(this)">λ de<span class="brand-f">F</span>rame this</button>
       ` : `
-        <div class="scores-row">
-          ${(item.models||[]).map(m=>{
-            const meta = MM[m.model]||{icon:'·',color:'#888'};
-            return `<div class="score-chip">
-              <span class="chip-icon" style="color:${meta.color}">${meta.icon}</span>
-              <span class="chip-num" style="color:${sc(m.overall)}">${m.overall}</span>
-              <span class="chip-name">${m.model.replace('ChatGPT','GPT').replace('DeepSeek','DS')}</span>
-            </div>`;
-          }).join('')}
-        </div>
+        <details class="analysis-details">
+          <summary>View intelligence readings</summary>
+          <div class="scores-row">
+            ${(item.models||[]).map(m=>{
+              const meta = MM[m.model]||{icon:'·',color:'#888'};
+              return `<div class="score-chip">
+                <span class="chip-icon" style="color:${meta.color}">${meta.icon}</span>
+                <span class="chip-num" style="color:${sc(m.overall)}">${m.overall}</span>
+                <span class="chip-name">${m.model.replace('ChatGPT','GPT').replace('DeepSeek','DS')}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </details>
         ${(item.models||[]).map(m => {
           const meta = MM[m.model]||{icon:'·',color:'#888'};
           if (!m.reasoning) return '';
@@ -287,9 +410,39 @@ function buildCard(item) {
             <span style="font-size:11px;color:var(--muted);font-style:italic;line-height:1.5;">${m.reasoning}</span>
           </div>`;
         }).join('')}
+        ${deframedHeadline ? `
+          <div class="lens-box deframed-box">
+            <div class="lens-label">λ de<span class="brand-f">F</span>ramed</div>
+            <div class="lens-note">The lens removed — a plain rendering of the claim.</div>
+            <div class="lens-text">${deframedHeadline}</div>
+            <div class="deep-dive">
+              <button class="deep-dive-toggle" aria-expanded="false" onclick="toggleDeepDive(this,'deFramed')">Read full deFramed analysis</button>
+              <div class="deep-dive-body" hidden>${deframedDeepDive}<div class="deep-dive-signature"></div></div>
+              <div class="deep-dive-note">On-demand deep dive · up to 400 words.</div>
+            </div>
+          </div>
+        ` : ''}
+        ${reframe ? `
+          <div class="lens-box reframe-box">
+            <div class="lens-label">λ reFrame</div>
+            <div class="lens-note">Analytical perspective, not a verdict.</div>
+            <div class="lens-text">${reframe}</div>
+            <div class="deep-dive">
+              <button class="deep-dive-toggle" aria-expanded="false" onclick="toggleDeepDive(this,'reFrame')">Read full reFrame analysis</button>
+              <div class="deep-dive-body" hidden>${reframeDeepDive}<div class="deep-dive-signature"></div></div>
+              <div class="deep-dive-note">On-demand deep dive · up to 400 words.</div>
+            </div>
+          </div>
+        ` : ''}
+        ${readerQuestion ? `
+          <div class="reader-question">
+            <div class="lens-label">? Reader question</div>
+            <div class="lens-text">${readerQuestion}</div>
+          </div>
+        ` : ''}
         <div class="card-signal">
-          <div class="signal-text">${item.signal||spreadLabel(sv)}</div>
-          <div class="signal-spread" style="color:${cc}">±${sv}</div>
+          <div class="signal-text">${escapeHtml(item.signal||spreadLabel(sv))}</div>
+          <div class="signal-spread" style="color:${cc}">${spreadLabel(sv)}</div>
         </div>
       `}
       <div class="card-actions">
@@ -300,6 +453,51 @@ function buildCard(item) {
     </div>
   `;
   return div;
+}
+
+async function loadArticle(btn) {
+  const card = btn.closest('.deframe-card');
+  const preview = card.querySelector('.article-preview');
+  const url = card.dataset.url;
+  if (!preview || !url) return;
+
+  if (preview.dataset.loaded === 'true') {
+    preview.hidden = !preview.hidden;
+    btn.textContent = preview.hidden ? 'Load article' : 'Hide article';
+    return;
+  }
+
+  btn.textContent = 'Loading article...';
+  btn.disabled = true;
+  try {
+    const response = await fetch('https://votum.ink/.netlify/functions/fetch-article', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+    const data = await response.json();
+    const bodyText = decodeArticleText(data.bodyText).trim();
+    if (!bodyText) throw new Error('No article text returned');
+
+    const excerpt = bodyText.length > 1800 ? `${bodyText.slice(0, 1800).trim()}…` : bodyText;
+    card.dataset.articleText = bodyText;
+    preview.innerHTML = `
+      <div class="article-preview-label">Loaded article text · ${escapeHtml(card.dataset.source)}</div>
+      <div class="article-preview-text">${escapeHtml(excerpt)}</div>
+      <a class="article-preview-link" href="${escapeHtml(url)}" target="_blank" rel="noopener">Open publisher ↗</a>
+    `;
+    preview.dataset.loaded = 'true';
+    preview.hidden = false;
+    btn.textContent = 'Hide article';
+  } catch (error) {
+    btn.textContent = 'Could not load article';
+    setTimeout(() => {
+      btn.textContent = 'Load article';
+      btn.disabled = false;
+    }, 1800);
+    return;
+  }
+  btn.disabled = false;
 }
 
 async function deframeCard(btn) {
@@ -313,10 +511,10 @@ async function deframeCard(btn) {
 
   try {
     let title = headline;
-    let description = '';
+    let description = card.dataset.articleText || '';
 
     // Fetch article content if URL available
-    if (url) {
+    if (url && !description) {
       try {
         const fetchRes = await fetch('https://votum.ink/.netlify/functions/fetch-article', {
           method: 'POST',
@@ -353,14 +551,14 @@ async function deframeCard(btn) {
       card.replaceWith(newCard);
     }
   } catch(e) {
-    btn.textContent = 'λ deFrame this';
+    btn.innerHTML = 'λ de<span class="brand-f">F</span>rame this';
     btn.disabled = false;
   }
 }
 
 function shareCard(btn, headline, spread, e) {
   e.stopPropagation();
-  const text = `"${headline}"\n\ndeFramed by 5 AI minds — spread ±${spread}\ndeframed.net`;
+  const text = `"${headline}"\n\nRead by four analytical intelligences — spread ±${spread}\nThe fifth mind is yours.\ndeframed.net`;
   if (navigator.share) {
     navigator.share({ title:'deFramed', text, url:'https://deframed.net' });
   } else {
@@ -373,7 +571,7 @@ function shareCard(btn, headline, spread, e) {
 
 function copyCard(btn, headline, spread, e) {
   e.stopPropagation();
-  const text = `"${headline}"\n\ndeFramed by 5 AI minds — spread ±${spread}\ndeframed.net`;
+  const text = `"${headline}"\n\nRead by four analytical intelligences — spread ±${spread}\nThe fifth mind is yours.\ndeframed.net`;
   navigator.clipboard.writeText(text).then(()=>{
     btn.textContent='Copied ✓'; btn.classList.add('done');
     setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('done'); },2000);
@@ -431,7 +629,7 @@ async function submitHeadline() {
   }
 
   btn.disabled = false;
-  btn.textContent = 'λ deFrame';
+  btn.innerHTML = 'λ de<span class="brand-f">F</span>rame';
 }
 
 document.getElementById('submit-input').addEventListener('keydown', e => {
@@ -441,11 +639,21 @@ document.getElementById('submit-input').addEventListener('keydown', e => {
 // Load pre-analyzed feed — instant scores for everyone
 async function loadLiveFeed() {
   try {
-    const res = await fetch('https://votum.ink/.netlify/functions/generate-feed');
+    const res = await fetch(LIVE_FEED_ENDPOINT);
     const data = await res.json();
     if (data.articles?.length) {
       feed.innerHTML = '';
-      data.articles.forEach(a => feed.appendChild(buildCard(a)));
+      data.articles.forEach(article => {
+        feed.appendChild(buildCard({
+          ...article,
+          // Universe articles arrive unscored; the existing card keeps the
+          // deFrame action available so analysis remains user-triggered.
+          headline: article.headline || article.title,
+          publishedAt: article.publishedAt || article.pubDate,
+          models: article.models || [],
+          spreadVal: article.spreadVal || 0,
+        }));
+      });
       return;
     }
   } catch(e) {}

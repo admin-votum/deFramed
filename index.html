@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>deFramed — Five intelligences. No frame.</title>
+<title>deFramed — Four intelligences. No frame.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Noto+Serif:wght@100&display=swap" rel="stylesheet">
@@ -87,8 +87,9 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
 .deep-dive-toggle::before { content:'+'; display:inline-block; width:15px; color:var(--text); }
 .deep-dive-toggle[aria-expanded="true"]::before { content:'−'; }
 .deep-dive-body { color:var(--muted); font-size:12px; line-height:1.65; margin-top:9px; white-space:pre-line; }
-.deep-dive-note { color:var(--muted); font-size:9px; font-style:italic; margin-top:7px; opacity:0.75; }
-.deep-dive-signature { color:#D96B2B; font-size:10px; letter-spacing:0.05em; margin-top:10px; text-align:right; }
+.deep-dive-quote { border-left:2px solid #D96B2B; margin-top:12px; padding-left:10px; }
+.deep-dive-quote-text { color:var(--text); font-size:12px; font-style:italic; line-height:1.6; }
+.deep-dive-signature { color:#D96B2B; font-size:10px; letter-spacing:0.05em; margin-top:6px; }
 
 /* SIGNAL */
 .card-signal { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
@@ -136,7 +137,7 @@ header { padding:14px 20px 12px; display:flex; align-items:center; justify-conte
   <div class="live-badge"><div class="live-dot"></div>Live</div>
 </header>
 
-<div class="tagline">Five intelligences. No frame. Synthesize — don't consume.</div>
+<div class="tagline">Four intelligences. No frame. Synthesize — don't consume.</div>
 
 <div class="submit-wrap">
   <input type="text" class="submit-input" id="submit-input" placeholder="Paste any headline — deframe it..." autocomplete="off">
@@ -197,20 +198,17 @@ const MM = {
 };
 
 const LIVE_FEED_ENDPOINT = 'https://votum.ink/.netlify/functions/universe-feed';
-const DEEP_DIVE_ANALYSTS = ['Claude', 'ChatGPT', 'Gemini', 'DeepSeek'];
 let deepDiveAnalystCursor = 0;
 
-function nextDeepDiveAnalyst(card) {
-  const available = new Set((card?.dataset.analysts || '').split(',').filter(Boolean));
-  for (let step = 0; step < DEEP_DIVE_ANALYSTS.length; step++) {
-    const index = (deepDiveAnalystCursor + step) % DEEP_DIVE_ANALYSTS.length;
-    const analyst = DEEP_DIVE_ANALYSTS[index];
-    if (!available.size || available.has(analyst)) {
-      deepDiveAnalystCursor = (index + 1) % DEEP_DIVE_ANALYSTS.length;
-      return analyst;
-    }
-  }
-  return DEEP_DIVE_ANALYSTS[deepDiveAnalystCursor++ % DEEP_DIVE_ANALYSTS.length];
+/**
+ * Picks the next intelligence to quote, rotating across cards so no single
+ * model dominates the page. Only models that actually returned a reading are
+ * eligible, so an attribution always points at text that model wrote.
+ */
+function nextDeepDiveAnalyst(item) {
+  const answered = (item.models || []).filter(m => m && m.reasoning && !m.abstained && m.status !== 'abstained');
+  if (!answered.length) return null;
+  return answered[deepDiveAnalystCursor++ % answered.length];
 }
 
 function sc(s) {
@@ -256,27 +254,49 @@ function decodeArticleText(value) {
     .replace(/\s+/g, ' ');
 }
 
+/*
+ * Returns the site's own framing text. It is deliberately unattributed: it is
+ * the same paragraph on every article, so signing it with a model name would
+ * credit a model for words it never produced. Model words are rendered
+ * separately by deepDiveQuote.
+ */
 function deepDiveFor(item, kind) {
   const explicit = kind === 'deFramed' ? item.deframedDeepDive : item.reframeDeepDive;
   if (explicit) return explicit;
 
   if (kind === 'deFramed') {
-    return `${item.deframedHeadline} This version keeps the direct claim while removing the headline's strongest emotional or argumentative packaging. It is not a fact check and it does not establish whether the claim is true. It gives the reader a cleaner object to examine: what happened, who is involved, and what the source is asking the reader to accept. The next step is to compare the wording with the article's evidence, time period, and omitted context.`;
+    const plainClaim = item.deframedHeadline || item.headline || 'The article makes a claim.';
+    return `${plainClaim} This version keeps the direct claim while removing the headline's strongest emotional or argumentative packaging. It is not a fact check and it does not establish whether the claim is true. It gives the reader a cleaner object to examine: what happened, who is involved, and what the source is asking the reader to accept. The next step is to compare the wording with the article's evidence, time period, and omitted context.`;
   }
 
-  return `${item.reframe} This perspective asks what the wording makes most visible and what it leaves outside the frame. It is an analytical reading, not a replacement headline and not a verdict. The purpose is to make the angle easier to notice before the reader decides whether the framing is fair, useful, or persuasive. Where the intelligences disagree, that disagreement belongs in the reading rather than being averaged away.`;
+  const perspective = item.reframe || item.headline || 'The headline presents a particular reading of the event.';
+  return `${perspective} This perspective asks what the wording makes most visible and what it leaves outside the frame. It is an analytical reading, not a replacement headline and not a verdict. The purpose is to make the angle easier to notice before the reader decides whether the framing is fair, useful, or persuasive. Where the intelligences disagree, that disagreement belongs in the reading rather than being averaged away.`;
+}
+
+function reframeFromModels(item, models) {
+  if (item.reframe) return item.reframe;
+  const reasoning = (models || []).find(m => m && m.reasoning)?.reasoning;
+  if (reasoning) return reasoning;
+  return 'The headline gives the reader a conclusion before showing the evidence and context needed to weigh it.';
+}
+
+/**
+ * Renders a verbatim reading from one of the intelligences that answered, with
+ * its name attached. Returns an empty string when nothing was returned, so an
+ * unanswered article carries no attribution at all.
+ */
+function deepDiveQuote(analyst) {
+  if (!analyst) return '';
+  return `<div class="deep-dive-quote">
+    <div class="deep-dive-quote-text">${escapeHtml(analyst.reasoning)}</div>
+    <div class="deep-dive-signature">— ${escapeHtml(analyst.model)}</div>
+  </div>`;
 }
 
 function toggleDeepDive(button, kind) {
   const body = button.nextElementSibling;
   if (!body) return;
   const expanded = button.getAttribute('aria-expanded') === 'true';
-  if (!expanded && !body.dataset.author) {
-    const signature = body.querySelector('.deep-dive-signature');
-    const analyst = nextDeepDiveAnalyst(button.closest('.deframe-card'));
-    body.dataset.author = analyst;
-    if (signature) signature.textContent = `— ${analyst}`;
-  }
   button.setAttribute('aria-expanded', String(!expanded));
   body.hidden = expanded;
   button.textContent = expanded ? `Read full ${kind} analysis` : 'Hide full analysis';
@@ -337,7 +357,7 @@ const SEEDS = [
     publishedAt: new Date(Date.now()-14400000).toISOString(),
     image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
     models: [{model:'Claude',overall:8},{model:'ChatGPT',overall:12},{model:'Gemini',overall:5},{model:'DeepSeek',overall:18}],
-    signal: 'Near-zero unanimous scores. All five identify science denial with no supporting evidence.',
+    signal: 'Near-zero unanimous scores. All four identify science denial with no supporting evidence.',
     spreadVal: 13,
     deframedHeadline: 'The headline describes climate change as a deliberately fabricated claim.',
     reframe: '“Greatest hoax” is a categorical dismissal rather than a description of evidence, so the framing asks the reader to accept the conclusion before examining the record.',
@@ -354,18 +374,13 @@ function buildCard(item) {
   div.dataset.url = item.url || '';
   div.dataset.headline = item.headline || '';
   div.dataset.source = item.source || '';
-  div.dataset.analysts = (item.models || [])
-    .filter(m => m && !m.abstained && m.status !== 'abstained')
-    .map(m => m.model)
-    .filter(name => DEEP_DIVE_ANALYSTS.includes(name))
-    .join(',');
 
   const headlineEsc = (item.headline||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
   const deframedHeadline = escapeHtml(item.deframedHeadline || '');
   const reframe = escapeHtml(item.reframe || '');
   const readerQuestion = escapeHtml(item.readerQuestion || '');
-  const deframedDeepDive = escapeHtml(deepDiveFor(item, 'deFramed'));
-  const reframeDeepDive = escapeHtml(deepDiveFor(item, 'reFrame'));
+  const deframedDeepDive = escapeHtml(deepDiveFor(item, 'deFramed')) + deepDiveQuote(nextDeepDiveAnalyst(item));
+  const reframeDeepDive = escapeHtml(deepDiveFor(item, 'reFrame')) + deepDiveQuote(nextDeepDiveAnalyst(item));
 
   div.innerHTML = `
     <div class="card-img-wrap">
@@ -402,14 +417,6 @@ function buildCard(item) {
             }).join('')}
           </div>
         </details>
-        ${(item.models||[]).map(m => {
-          const meta = MM[m.model]||{icon:'·',color:'#888'};
-          if (!m.reasoning) return '';
-          return `<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:4px;">
-            <span style="font-size:10px;color:${meta.color};margin-top:2px;flex-shrink:0;">${meta.icon}</span>
-            <span style="font-size:11px;color:var(--muted);font-style:italic;line-height:1.5;">${m.reasoning}</span>
-          </div>`;
-        }).join('')}
         ${deframedHeadline ? `
           <div class="lens-box deframed-box">
             <div class="lens-label">λ de<span class="brand-f">F</span>ramed</div>
@@ -417,20 +424,18 @@ function buildCard(item) {
             <div class="lens-text">${deframedHeadline}</div>
             <div class="deep-dive">
               <button class="deep-dive-toggle" aria-expanded="false" onclick="toggleDeepDive(this,'deFramed')">Read full deFramed analysis</button>
-              <div class="deep-dive-body" hidden>${deframedDeepDive}<div class="deep-dive-signature"></div></div>
-              <div class="deep-dive-note">On-demand deep dive · up to 400 words.</div>
+              <div class="deep-dive-body" hidden>${deframedDeepDive}</div>
             </div>
           </div>
         ` : ''}
         ${reframe ? `
           <div class="lens-box reframe-box">
-            <div class="lens-label">λ reFrame</div>
+            <div class="lens-label">λ re<span class="brand-f">F</span>rame</div>
             <div class="lens-note">Analytical perspective, not a verdict.</div>
             <div class="lens-text">${reframe}</div>
             <div class="deep-dive">
               <button class="deep-dive-toggle" aria-expanded="false" onclick="toggleDeepDive(this,'reFrame')">Read full reFrame analysis</button>
-              <div class="deep-dive-body" hidden>${reframeDeepDive}<div class="deep-dive-signature"></div></div>
-              <div class="deep-dive-note">On-demand deep dive · up to 400 words.</div>
+              <div class="deep-dive-body" hidden>${reframeDeepDive}</div>
             </div>
           </div>
         ` : ''}
@@ -527,12 +532,20 @@ async function deframeCard(btn) {
       } catch(e) {}
     }
 
-    const res = await fetch('https://votum.ink/.netlify/functions/analyze-multi', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description, source }),
-    });
-    const data = await res.json();
+    const [analysisResponse, summaryResponse] = await Promise.all([
+      fetch('https://votum.ink/.netlify/functions/analyze-multi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, source }),
+      }),
+      fetch('https://votum.ink/.netlify/functions/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ title, description, source }),
+      }),
+    ]);
+    const data = await analysisResponse.json();
+    const summary = summaryResponse.ok ? await summaryResponse.json() : {};
 
     if (data.models?.length) {
       const overalls = data.models.map(m => m.overall);
@@ -545,6 +558,8 @@ async function deframeCard(btn) {
         publishedAt: new Date().toISOString(),
         image: card.querySelector('.card-img')?.src || null,
         models: data.models,
+        deframedHeadline: summary.the_point || title,
+        reframe: reframeFromModels({}, data.models),
         signal: data.spread?.desc || spreadLabel(sv),
         spreadVal: sv,
       });

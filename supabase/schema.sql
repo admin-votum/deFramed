@@ -29,13 +29,8 @@ create table if not exists public.windows (
   colors jsonb not null default '["#7189A7", "#D96B2B"]'::jsonb,
   date_label text not null default 'Now',
   published_at timestamptz not null default now(),
-  pinned boolean not null default false,
   created_at timestamptz not null default now()
 );
-
-create unique index if not exists one_pinned_deframed_window
-  on public.windows (pinned)
-  where pinned = true;
 
 alter table public.site_settings enable row level security;
 alter table public.windows enable row level security;

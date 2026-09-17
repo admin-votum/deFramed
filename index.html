@@ -21,7 +21,7 @@ html { background:var(--bg); scroll-behavior:smooth; }
 body { max-width:480px; min-height:100vh; margin:0 auto; background:var(--bg); color:var(--text); font-family:Inter,sans-serif; }
 button, input, textarea { font:inherit; }
 button { cursor:pointer; }
-.shell { min-height:100vh; padding-bottom:76px; }
+.shell { min-height:100vh; padding-bottom:196px; }
 
 /* The original deFramed shell stays intentionally quiet and narrow. */
 header { position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:14px 20px 12px; background:rgba(10,10,8,.96); border-bottom:.5px solid var(--border); }
@@ -76,14 +76,14 @@ header { position:sticky; top:0; z-index:10; display:flex; align-items:center; j
 .window-source { overflow:hidden; color:var(--muted); font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
 .empty-state { padding:40px 20px; color:var(--muted); font-family:'EB Garamond',serif; font-size:20px; text-align:center; }
 
-.support { padding:28px 20px 18px; border-top:.5px solid var(--border); }
+.support { position:fixed; right:0; bottom:60px; left:50%; z-index:9; width:min(100%,480px); max-height:132px; overflow-y:auto; padding:14px 20px 18px; border-top:.5px solid var(--border); border-bottom:.5px solid var(--border); transform:translateX(-50%); background:rgba(10,10,8,.97); }
 .support h2 { margin-bottom:14px; font-family:'EB Garamond',serif; font-size:25px; font-weight:400; }
 .support p { margin-bottom:10px; color:var(--muted); font-size:12px; line-height:1.6; }
 .support strong { color:var(--text); font-weight:400; }
 .support a { color:var(--text); text-decoration:none; border-bottom:.5px solid var(--border2); }
-.footer-mark { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; padding-top:18px; color:var(--text); font-family:'EB Garamond',serif; font-size:15px; font-weight:700; }
-.footer-copy { display:flex; flex-direction:column; gap:2px; }
-.footer-copy span { color:var(--text); font-size:12px; font-weight:700; }
+.footer-mark { display:block; width:100%; max-width:100%; color:var(--text); font-family:'EB Garamond',serif; font-size:15px; font-weight:700; }
+.footer-copy { display:flex; flex-direction:column; gap:2px; min-width:0; max-width:100%; }
+.footer-copy span { display:block; max-width:100%; overflow-wrap:anywhere; word-break:break-word; color:var(--text); font-size:12px; font-weight:700; line-height:1.35; white-space:normal; }
 .footer-mark a { border:0; color:var(--muted); }
 .bottom-nav { position:fixed; bottom:0; left:50%; z-index:10; display:flex; width:100%; max-width:480px; transform:translateX(-50%); justify-content:space-around; padding:10px 20px 20px; border-top:.5px solid var(--border2); background:rgba(10,10,8,.97); }
 .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; border:0; background:transparent; color:var(--muted); text-decoration:none; }
@@ -114,7 +114,7 @@ header { position:sticky; top:0; z-index:10; display:flex; align-items:center; j
 .admin-note { margin-top:14px; color:var(--muted); font-size:10px; line-height:1.5; }
 .toast { position:fixed; right:20px; bottom:82px; left:20px; z-index:30; display:none; padding:10px 12px; border:1px solid var(--border2); border-radius:8px; background:var(--surface2); color:var(--text); font-size:11px; text-align:center; }
 .toast.show { display:block; }
-@media (min-width:700px) { body { margin:20px auto; border:1px solid var(--border); } .bottom-nav { bottom:20px; border:1px solid var(--border2); border-radius:10px; } }
+@media (min-width:700px) { body { margin:20px auto; border:1px solid var(--border); } .shell { padding-bottom:236px; } .support { bottom:84px; } .bottom-nav { bottom:20px; border:1px solid var(--border2); border-radius:10px; } }
 </style>
 </head>
 <body>

@@ -121,7 +121,7 @@ header { position:sticky; top:0; z-index:10; display:flex; align-items:center; j
       <span class="wm-text" id="brand-name">de<span class="brand-f">F</span>ramed</span>
       <span class="wm-tag" id="brand-tag">windows</span>
     </a>
-    <div class="header-right"><span class="live-badge"><span class="live-dot"></span><span id="status-label">Live</span></span></div>
+    <div class="header-right"><span class="live-badge"><span class="live-dot"></span><span id="status-label">Live</span></span><button class="admin-link" id="admin-open" type="button" hidden>Edit</button></div>
   </header>
 
   <main id="top">
@@ -134,41 +134,42 @@ header { position:sticky; top:0; z-index:10; display:flex; align-items:center; j
       <div class="footer-mark"><div class="footer-copy"><span id="footer-line-1"></span><span id="footer-line-2"></span><span id="footer-line-3"></span><span id="footer-line-4"></span></div><a href="privacy.html">Privacy</a></div>
     </section>
   </main>
-  <nav class="bottom-nav" aria-label="Main navigation"><a class="nav-item active" href="#top"><span class="nav-symbol">⌂</span><span class="nav-label">Windows</span></a><a class="nav-item" href="#about"><span class="nav-symbol">?</span><span class="nav-label">About</span></a><button class="nav-item" id="admin-nav" type="button"><span class="nav-symbol">+</span><span class="nav-label">Create</span></button><a class="nav-item" href="privacy.html"><span class="nav-symbol">·</span><span class="nav-label">Privacy</span></a></nav>
+  <nav class="bottom-nav" aria-label="Main navigation"><a class="nav-item active" href="#top"><span class="nav-symbol">⌂</span><span class="nav-label">Windows</span></a><a class="nav-item" href="#about"><span class="nav-symbol">?</span><span class="nav-label">About</span></a><button class="nav-item" id="admin-nav" type="button" hidden><span class="nav-symbol">+</span><span class="nav-label">Create</span></button><a class="nav-item" href="privacy.html"><span class="nav-symbol">·</span><span class="nav-label">Privacy</span></a></nav>
 </div>
+
+<div class="modal-backdrop" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><div class="modal auth-modal">
+  <div class="modal-head"><h2 id="auth-title">Owner login</h2></div>
+  <p class="admin-note">Sign in to manage this personal blog. This doorway is only shown at the private owner URL.</p>
+  <form class="form-grid" id="auth-form"><div class="field"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" required></div><div class="field"><label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password"></div><button class="primary-btn" type="submit">Sign in</button><button class="secondary-btn" id="magic-link" type="button">Email me a magic link</button></form>
+  <p class="admin-note" id="auth-message"></p>
+</div></div>
 
 <div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-title"><div class="modal">
   <div class="modal-head"><h2 id="admin-title">Window keeper</h2><button class="close-btn" id="admin-close" type="button" aria-label="Close">×</button></div>
   <div class="modal-section" style="border-top:0;padding-top:0"><h3>Edit site text</h3><form class="form-grid" id="header-form"><div class="field"><label for="edit-name">Wordmark</label><input id="edit-name" value="deFramed"></div><div class="field"><label for="edit-tag">Small label</label><input id="edit-tag" value="windows"></div><div class="field"><label for="edit-status">Status</label><input id="edit-status" value="Live"></div><div class="field"><label for="edit-tagline">Tagline</label><textarea id="edit-tagline"></textarea></div><h3 class="form-subhead">Four editable lines</h3><div class="field"><label for="edit-footer-line-1">Line 1</label><input id="edit-footer-line-1"></div><div class="field"><label for="edit-footer-line-2">Line 2</label><input id="edit-footer-line-2"></div><div class="field"><label for="edit-footer-line-3">Line 3</label><input id="edit-footer-line-3"></div><div class="field"><label for="edit-footer-line-4">Line 4</label><input id="edit-footer-line-4"></div><button class="primary-btn" type="submit">Save site text</button></form></div>
   <div class="modal-section"><h3>Create a window</h3><form class="form-grid" id="window-form"><div class="field"><label for="window-title">Title</label><input id="window-title" placeholder="Write a title for the video" required></div><div class="field"><label for="window-caption">Caption (optional)</label><textarea id="window-caption" placeholder="A few words to leave beside it"></textarea></div><div class="field"><label for="window-source">Byline (optional)</label><input id="window-source" placeholder="Your name"></div><div class="field"><label for="window-profile-image">Profile picture URL</label><input id="window-profile-image" type="url" placeholder="https://...jpg or media/profile.jpg"></div><div class="field"><label for="window-profile-file">Or choose a profile picture</label><input id="window-profile-file" type="file" accept="image/*"></div><div class="field"><label for="window-video">Video link</label><input id="window-video" type="url" placeholder="TikTok, YouTube, or MP4 link"></div><div class="field"><label for="window-file">Or choose a video file</label><input id="window-file" type="file" accept="video/*"></div><button class="primary-btn" type="submit">Publish window</button></form></div>
-  <p class="admin-note">Create is the private owner flow. Local file selections are preview-only until the media files and content are published to the site.</p>
+  <p class="admin-note">Signed in as <span id="owner-email"></span>. <button class="secondary-btn" id="sign-out" type="button">Sign out</button></p>
 </div></div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
-const STORAGE={settings:'deframed-window-settings-v2',windows:'deframed-windows-v2'};
+const STORAGE={settings:'deframed-window-settings-v3',windows:'deframed-windows-v3'};
 const DEFAULT_SETTINGS={name:'deFramed',tag:'windows',status:'Live',tagline:'',footerLine1:'',footerLine2:'',footerLine3:'',footerLine4:''};
 const query=new URLSearchParams(location.search);
-const previewMode=query.get('preview')==='1'||query.get('admin')==='1'||/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const adminMode=query.get('admin')==='1';
+const supabaseConfig=window.DEFRAMED_SUPABASE||{};
+const supabaseClient=window.supabase&&supabaseConfig.url&&supabaseConfig.anonKey?window.supabase.createClient(supabaseConfig.url,supabaseConfig.anonKey):null;
 let settings={...DEFAULT_SETTINGS};
 let windows=[];
+let currentUser=null;
 function readJson(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}}
 function saveJson(key,value){localStorage.setItem(key,JSON.stringify(value));}
-async function loadContent(){
-  try{
-    const response=await fetch(`content.json?ts=${Date.now()}`,{cache:'no-store'});
-    if(!response.ok)throw new Error(`content.json returned ${response.status}`);
-    const content=await response.json();
-    const publicSettings={...DEFAULT_SETTINGS,...(content.settings||{})};
-    const publicWindows=Array.isArray(content.windows)?content.windows:[];
-    settings=previewMode?{...publicSettings,...readJson(STORAGE.settings,{})}:publicSettings;
-    windows=previewMode?readJson(STORAGE.windows,publicWindows):publicWindows;
-  }catch(error){
-    settings=previewMode?{...DEFAULT_SETTINGS,...readJson(STORAGE.settings,{})}:DEFAULT_SETTINGS;
-    windows=previewMode?readJson(STORAGE.windows,[]):[];
-    console.warn('Using built-in content fallback:',error);
-  }
-}
+function settingsFromRow(row){return row?{...DEFAULT_SETTINGS,name:row.name||DEFAULT_SETTINGS.name,tag:row.tag||DEFAULT_SETTINGS.tag,status:row.status||DEFAULT_SETTINGS.status,tagline:row.tagline||'',footerLine1:row.footer_line_1||'',footerLine2:row.footer_line_2||'',footerLine3:row.footer_line_3||'',footerLine4:row.footer_line_4||''}:{...DEFAULT_SETTINGS};}
+function windowFromRow(row){return {id:row.id,title:row.title,caption:row.caption||'',source:row.source||'',profileImage:row.profile_image_url||'',video:row.video_url||'',colors:row.colors||['#7189A7','#D96B2B'],date:row.date_label||'Now',publishedAt:row.published_at||row.created_at};}
+async function staticContent(){try{const response=await fetch(`content.json?ts=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error(`content.json returned ${response.status}`);return await response.json();}catch(error){console.warn('Using empty fallback content:',error);return {settings:DEFAULT_SETTINGS,windows:[]};}}
+async function loadContent(){const fallback=await staticContent();if(supabaseClient){const [settingsResult,windowsResult]=await Promise.all([supabaseClient.from('site_settings').select('*').eq('id','default').maybeSingle(),supabaseClient.from('windows').select('*').order('published_at',{ascending:false})]);if(!settingsResult.error&&!windowsResult.error){settings=settingsFromRow(settingsResult.data);windows=(windowsResult.data||[]).map(windowFromRow);return;}console.warn('Using static content while Supabase is unavailable:',settingsResult.error||windowsResult.error);}settings={...DEFAULT_SETTINGS,...(fallback.settings||{})};windows=Array.isArray(fallback.windows)?fallback.windows:[];}
 function esc(value=''){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
 function showToast(message){const toast=document.getElementById('toast');toast.textContent=message;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),2200);}
 function isYouTube(url=''){return /(?:youtube\.com\/watch\?v=|youtu\.be\/)/i.test(url);}
@@ -184,12 +185,23 @@ function render(){const feed=document.getElementById('feed');const dated=windows
 function cardData(card){return windows.find(item=>item.id===card.dataset.id)||{};}
 async function shareWindow(card){const item=cardData(card);const text=`${item.title}\n\n${item.caption||''}\n\n${settings.name}`;if(navigator.share)await navigator.share({title:item.title,text,url:location.href});else{await navigator.clipboard.writeText(text);showToast('Window copied');}}
 async function copyWindow(card){const item=cardData(card);await navigator.clipboard.writeText(`${item.title}\n\n${item.caption||''}\n\n${settings.name}`);showToast('Window copied');}
-function openAdmin(){document.getElementById('admin-modal').classList.add('open');document.body.style.overflow='hidden';applySettings();}
-function closeAdmin(){document.getElementById('admin-modal').classList.remove('open');document.body.style.overflow='';}
-document.getElementById('admin-nav').addEventListener('click',openAdmin);document.getElementById('admin-close').addEventListener('click',closeAdmin);document.getElementById('admin-modal').addEventListener('click',event=>{if(event.target.id==='admin-modal')closeAdmin();});
-document.getElementById('header-form').addEventListener('submit',event=>{event.preventDefault();settings={name:document.getElementById('edit-name').value.trim()||'deFramed',tag:document.getElementById('edit-tag').value.trim()||'windows',status:document.getElementById('edit-status').value.trim()||'Live',tagline:document.getElementById('edit-tagline').value.trim(),footerLine1:document.getElementById('edit-footer-line-1').value.trim(),footerLine2:document.getElementById('edit-footer-line-2').value.trim(),footerLine3:document.getElementById('edit-footer-line-3').value.trim(),footerLine4:document.getElementById('edit-footer-line-4').value.trim()};saveJson(STORAGE.settings,settings);applySettings();showToast('Site text saved');});
-document.getElementById('window-form').addEventListener('submit',event=>{event.preventDefault();const file=document.getElementById('window-file').files[0];const profileFile=document.getElementById('window-profile-file').files[0];const url=document.getElementById('window-video').value.trim();const profileUrl=document.getElementById('window-profile-image').value.trim();const objectUrl=file?URL.createObjectURL(file):'';const profileObjectUrl=profileFile?URL.createObjectURL(profileFile):'';const item={id:`window-${Date.now()}`,title:document.getElementById('window-title').value.trim(),caption:document.getElementById('window-caption').value.trim(),source:document.getElementById('window-source').value.trim(),profileImage:profileObjectUrl||profileUrl,video:objectUrl||url,date:'Just now',publishedAt:new Date().toISOString(),colors:['#7189A7','#D96B2B']};if(!item.title||!item.video)return showToast('Add a title and a video');windows=[item,...windows];saveJson(STORAGE.windows,windows);render();event.target.reset();closeAdmin();showToast('Window published');});
-(async()=>{await loadContent();applySettings();render();if(query.get('admin')==='1')openAdmin();})();
+function updateAuthUi(){const signedIn=Boolean(currentUser);document.getElementById('admin-open').hidden=!signedIn;document.getElementById('admin-nav').hidden=!signedIn;document.getElementById('owner-email').textContent=currentUser?.email||'';if(adminMode&&!signedIn)openAuth();else if(signedIn)closeAuth();}
+function openAuth(){document.getElementById('auth-modal').classList.add('open');document.body.style.overflow='hidden';}
+function closeAuth(){document.getElementById('auth-modal').classList.remove('open');if(!document.getElementById('admin-modal').classList.contains('open'))document.body.style.overflow='';}
+function openAdmin(){if(!currentUser)return openAuth();document.getElementById('admin-modal').classList.add('open');document.body.style.overflow='hidden';applySettings();}
+function closeAdmin(){document.getElementById('admin-modal').classList.remove('open');if(!document.getElementById('auth-modal').classList.contains('open'))document.body.style.overflow='';}
+function authMessage(message){document.getElementById('auth-message').textContent=message;}
+async function uploadAsset(file,folder){if(!supabaseClient||!currentUser)return URL.createObjectURL(file);const extension=(file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'');const path=`${folder}/${crypto.randomUUID?crypto.randomUUID():Date.now()}${extension?`.${extension}`:''}`;const {error}=await supabaseClient.storage.from('deframed-media').upload(path,file,{contentType:file.type||undefined,upsert:false});if(error)throw error;return supabaseClient.storage.from('deframed-media').getPublicUrl(path).data.publicUrl;}
+async function saveSettings(){const payload={id:'default',name:settings.name,tag:settings.tag,status:settings.status,tagline:settings.tagline,footer_line_1:settings.footerLine1,footer_line_2:settings.footerLine2,footer_line_3:settings.footerLine3,footer_line_4:settings.footerLine4,updated_at:new Date().toISOString()};if(supabaseClient&&currentUser){const {error}=await supabaseClient.from('site_settings').upsert(payload);if(error)throw error;}else saveJson(STORAGE.settings,settings);}
+async function saveWindow(item){if(supabaseClient&&currentUser){const {error}=await supabaseClient.from('windows').insert({title:item.title,caption:item.caption,source:item.source||'',profile_image_url:item.profileImage||null,video_url:item.video,colors:item.colors,date_label:item.date,published_at:item.publishedAt});if(error)throw error;}else{windows=[item,...windows];saveJson(STORAGE.windows,windows);}}
+document.getElementById('admin-open').addEventListener('click',openAdmin);document.getElementById('admin-nav').addEventListener('click',openAdmin);document.getElementById('admin-close').addEventListener('click',closeAdmin);document.getElementById('admin-modal').addEventListener('click',event=>{if(event.target.id==='admin-modal')closeAdmin();});
+document.getElementById('auth-form').addEventListener('submit',async event=>{event.preventDefault();if(!supabaseClient)return authMessage('Supabase is not configured yet.');authMessage('Signing in…');const {error}=await supabaseClient.auth.signInWithPassword({email:document.getElementById('auth-email').value.trim(),password:document.getElementById('auth-password').value});authMessage(error?error.message:'Signed in.');});
+document.getElementById('magic-link').addEventListener('click',async()=>{if(!supabaseClient)return authMessage('Supabase is not configured yet.');const email=document.getElementById('auth-email').value.trim();if(!email)return authMessage('Enter your email first.');const {error}=await supabaseClient.auth.signInWithOtp({email,options:{emailRedirectTo:`${location.origin}${location.pathname}?admin=1`}});authMessage(error?error.message:'Check your email for the sign-in link.');});
+document.getElementById('sign-out').addEventListener('click',async()=>{if(supabaseClient)await supabaseClient.auth.signOut();closeAdmin();});
+document.getElementById('header-form').addEventListener('submit',async event=>{event.preventDefault();settings={name:document.getElementById('edit-name').value.trim()||'deFramed',tag:document.getElementById('edit-tag').value.trim()||'windows',status:document.getElementById('edit-status').value.trim()||'Live',tagline:document.getElementById('edit-tagline').value.trim(),footerLine1:document.getElementById('edit-footer-line-1').value.trim(),footerLine2:document.getElementById('edit-footer-line-2').value.trim(),footerLine3:document.getElementById('edit-footer-line-3').value.trim(),footerLine4:document.getElementById('edit-footer-line-4').value.trim()};try{await saveSettings();applySettings();showToast('Site text saved');}catch(error){showToast(`Could not save: ${error.message}`);}});
+document.getElementById('window-form').addEventListener('submit',async event=>{event.preventDefault();const submit=event.target.querySelector('button[type="submit"]');submit.disabled=true;try{const file=document.getElementById('window-file').files[0];const profileFile=document.getElementById('window-profile-file').files[0];const url=document.getElementById('window-video').value.trim();const profileUrl=document.getElementById('window-profile-image').value.trim();const video=file?await uploadAsset(file,'videos'):url;const profileImage=profileFile?await uploadAsset(profileFile,'profiles'):profileUrl;const item={id:`window-${Date.now()}`,title:document.getElementById('window-title').value.trim(),caption:document.getElementById('window-caption').value.trim(),source:document.getElementById('window-source').value.trim(),profileImage,video,date:'Just now',publishedAt:new Date().toISOString(),colors:['#7189A7','#D96B2B']};if(!item.title||!item.video)throw new Error('Add a title and a video.');await saveWindow(item);await loadContent();render();event.target.reset();closeAdmin();showToast('Window published');}catch(error){showToast(`Could not publish: ${error.message}`);}finally{submit.disabled=false;}});
+async function init(){if(supabaseClient){const {data}=await supabaseClient.auth.getSession();currentUser=data.session?.user||null;supabaseClient.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;updateAuthUi();if(currentUser){loadContent().then(()=>{applySettings();render();});}});}await loadContent();applySettings();render();updateAuthUi();}
+init();
 </script>
 </body>
 </html>

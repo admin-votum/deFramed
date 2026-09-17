@@ -1,0 +1,41 @@
+{
+  "settings": {
+    "name": "deFramed",
+    "tag": "windows",
+    "status": "Live",
+    "tagline": "Small windows into what we notice. Synthesize — don't consume.",
+    "footerLine1": "λ deFramed",
+    "footerLine2": "windows into what we notice"
+  },
+  "windows": [
+    {
+      "id": "sample-1",
+      "title": "A little weather inside the room",
+      "caption": "A single frame can hold more time than a headline. Stay with the light as it changes.",
+      "source": "field note 01",
+      "video": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+      "colors": ["#7189A7", "#D96B2B"],
+      "date": "Introduction",
+      "publishedAt": "2026-09-17T08:00:00Z",
+      "pinned": true
+    },
+    {
+      "id": "sample-2",
+      "title": "The world, briefly unframed",
+      "caption": "Windows are invitations, not instructions. Look through one. Then look away.",
+      "source": "deFramed studio",
+      "colors": ["#A77D71", "#5A9A6A"],
+      "date": "Yesterday",
+      "publishedAt": "2026-09-16T08:00:00Z"
+    },
+    {
+      "id": "sample-3",
+      "title": "Something worth keeping open",
+      "caption": "A quiet place for moving images, unfinished thoughts, and the things that do not need to become news.",
+      "source": "field note 03",
+      "colors": ["#6D769D", "#9A9A68"],
+      "date": "Earlier",
+      "publishedAt": "2026-09-15T08:00:00Z"
+    }
+  ]
+}

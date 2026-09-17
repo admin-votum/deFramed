@@ -1,671 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>deFramed — Five intelligences. No frame.</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#0A0A08">
+<title>deFramed — windows into what we notice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Noto+Serif:wght@100&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>λ</text></svg>">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 :root {
   --bg:#0A0A08; --surface:#111110; --surface2:#1A1A18;
-  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.10);
-  --text:#EDEAE2; --muted:#7A7A72;
+  --border:rgba(255,255,255,.06); --border2:rgba(255,255,255,.12);
+  --text:#EDEAE2; --muted:#7A7A72; --accent:#D96B2B;
+  --green:#5A9A6A; --blue:#7189A7;
 }
-body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; max-width:480px; margin:0 auto; display:flex; flex-direction:column; }
+html { background:var(--bg); scroll-behavior:smooth; }
+body { max-width:480px; min-height:100vh; margin:0 auto; background:var(--bg); color:var(--text); font-family:Inter,sans-serif; }
+button, input, textarea { font:inherit; }
+button { cursor:pointer; }
+.shell { min-height:100vh; padding-bottom:76px; }
 
-/* HEADER */
-header { padding:14px 20px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:0.5px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:100; }
-.wordmark { display:flex; align-items:baseline; gap:6px; text-decoration:none; }
-.wm-icon { font-size:16px; color:var(--text); opacity:0.7; }
-.wm-text { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; color:var(--text); }
-.brand-f { color:#D96B2B; }
-.wm-tag { font-size:9px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
-.live-badge { display:flex; align-items:center; gap:5px; font-size:9px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+/* The original deFramed shell stays intentionally quiet and narrow. */
+header { position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:14px 20px 12px; background:rgba(10,10,8,.96); border-bottom:.5px solid var(--border); }
+.wordmark { display:flex; align-items:baseline; gap:6px; color:var(--text); text-decoration:none; }
+.wm-icon { font-size:16px; opacity:.7; }
+.wm-text { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; }
+.wm-text .brand-f { color:var(--accent); }
+.wm-tag { max-width:120px; overflow:hidden; color:var(--muted); font-size:9px; letter-spacing:.1em; text-transform:uppercase; white-space:nowrap; }
+.header-right { display:flex; align-items:center; gap:10px; }
+.live-badge, .admin-link { color:var(--muted); font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
+.live-badge { display:flex; align-items:center; gap:5px; }
 .live-dot { width:5px; height:5px; border-radius:50%; background:#FF3B3B; animation:livepulse 1.5s ease-in-out infinite; }
-@keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.admin-link { border:0; background:transparent; padding:2px 0; opacity:.65; }
+.admin-link:hover { color:var(--text); opacity:1; }
+@keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* TAGLINE */
-.tagline { padding:12px 20px; border-bottom:0.5px solid var(--border); font-family:'EB Garamond',serif; font-size:14px; font-style:italic; color:var(--muted); line-height:1.5; }
+.tagline { padding:12px 20px; border-bottom:.5px solid var(--border); color:var(--muted); font-family:'EB Garamond',serif; font-size:14px; font-style:italic; line-height:1.5; }
+.window-submit { display:flex; gap:8px; padding:12px 20px; border-bottom:.5px solid var(--border); }
+.window-input { flex:1; min-width:0; padding:10px 14px; border:.5px solid var(--border2); border-radius:8px; outline:none; background:var(--surface); color:var(--text); font-family:'EB Garamond',serif; font-size:14px; }
+.window-input::placeholder { color:var(--muted); font-style:italic; }
+.window-input:focus { border-color:rgba(255,255,255,.24); }
+.window-submit-btn, .primary-btn { padding:10px 14px; border:0; border-radius:8px; background:var(--text); color:var(--bg); font-size:11px; letter-spacing:.06em; white-space:nowrap; }
+.window-submit-btn:hover, .primary-btn:hover { opacity:.86; }
 
-/* SUBMIT */
-.submit-wrap { padding:12px 20px; border-bottom:0.5px solid var(--border); display:flex; gap:8px; }
-.submit-input { flex:1; background:var(--surface); border:0.5px solid var(--border2); border-radius:8px; padding:10px 14px; font-size:14px; font-family:'EB Garamond',serif; color:var(--text); outline:none; }
-.submit-input::placeholder { color:var(--muted); font-style:italic; }
-.submit-input:focus { border-color:rgba(255,255,255,0.2); }
-.submit-btn { background:var(--text); color:var(--bg); border:none; border-radius:8px; padding:10px 14px; font-size:11px; font-family:'Inter',sans-serif; letter-spacing:0.06em; cursor:pointer; white-space:nowrap; transition:opacity 0.15s; }
-.submit-btn:hover { opacity:0.85; }
-.submit-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.feed { display:flex; flex-direction:column; }
+.window-card { display:flex; flex-direction:column; gap:12px; padding:16px 20px 18px; border-bottom:.5px solid var(--border); }
+.pinned-card { background:linear-gradient(180deg,rgba(217,107,43,.08),transparent 42%); }
+.pinned-card .window-meta span:first-child { color:var(--accent); }
+.window-meta { display:flex; justify-content:space-between; align-items:center; gap:10px; color:var(--muted); font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
+.window-meta span:last-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.window-byline { display:flex; align-items:center; gap:7px; min-width:0; }
+.window-byline > span:last-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.profile-avatar { display:grid; flex:0 0 auto; place-items:center; width:25px; height:25px; overflow:hidden; border:1px solid var(--border2); border-radius:50%; background:var(--surface2); color:var(--text); font-family:'EB Garamond',serif; font-size:12px; letter-spacing:0; text-transform:none; }
+.profile-avatar img { display:block; width:100%; height:100%; object-fit:cover; }
+.window-frame { position:relative; display:flex; align-items:center; justify-content:center; min-height:205px; overflow:hidden; border:1px solid var(--border2); border-radius:10px; background:var(--surface2); }
+.window-frame::after { position:absolute; inset:0; pointer-events:none; content:""; background:linear-gradient(120deg,rgba(255,255,255,.06),transparent 28%,transparent 68%,rgba(0,0,0,.24)); }
+.window-frame video, .window-frame iframe { display:block; width:100%; min-height:205px; border:0; object-fit:cover; }
+.window-frame iframe { position:absolute; inset:0; height:100%; }
+.frame-art { position:absolute; inset:0; overflow:hidden; }
+.frame-art::before, .frame-art::after { position:absolute; content:""; border-radius:50%; filter:blur(1px); }
+.frame-art::before { width:220px; height:220px; top:-80px; right:-35px; background:var(--frame-a,#7189A7); opacity:.68; }
+.frame-art::after { width:260px; height:260px; bottom:-160px; left:-45px; background:var(--frame-b,#D96B2B); opacity:.72; }
+.frame-art .frame-line { position:absolute; top:18%; left:13%; width:74%; height:64%; border:1px solid rgba(255,255,255,.42); transform:rotate(-8deg); }
+.frame-art .frame-label { position:absolute; right:15px; bottom:13px; color:rgba(255,255,255,.76); font-family:'EB Garamond',serif; font-size:18px; font-style:italic; }
+.play-mark { position:relative; z-index:2; display:grid; place-items:center; width:46px; height:46px; border:1px solid rgba(255,255,255,.6); border-radius:50%; background:rgba(10,10,8,.45); color:var(--text); font-size:15px; padding-left:2px; }
+.window-title { color:var(--text); font-family:'EB Garamond',serif; font-size:23px; line-height:1.18; font-weight:400; }
+.window-caption { color:#B7B3A8; font-size:12px; line-height:1.6; }
+.window-footer { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.window-actions { display:flex; gap:7px; }
+.action-btn { padding:5px 11px; border:.5px solid var(--border2); border-radius:20px; background:transparent; color:var(--muted); font-size:10px; letter-spacing:.06em; text-transform:uppercase; }
+.action-btn:hover { border-color:rgba(255,255,255,.3); color:var(--text); }
+.window-source { overflow:hidden; color:var(--muted); font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+.empty-state { padding:40px 20px; color:var(--muted); font-family:'EB Garamond',serif; font-size:20px; text-align:center; }
 
-/* FEED */
-.feed { flex:1; display:flex; flex-direction:column; padding-bottom:80px; }
+.support { padding:28px 20px 18px; border-top:.5px solid var(--border); }
+.support h2 { margin-bottom:14px; font-family:'EB Garamond',serif; font-size:25px; font-weight:400; }
+.support p { margin-bottom:10px; color:var(--muted); font-size:12px; line-height:1.6; }
+.support strong { color:var(--text); font-weight:400; }
+.support a { color:var(--text); text-decoration:none; border-bottom:.5px solid var(--border2); }
+.footer-mark { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; padding-top:18px; color:var(--muted); font-family:'EB Garamond',serif; font-size:15px; }
+.footer-copy { display:flex; flex-direction:column; gap:2px; }
+.footer-copy span:last-child { color:var(--muted); font-size:12px; }
+.footer-mark a { border:0; color:var(--muted); }
+.bottom-nav { position:fixed; bottom:0; left:50%; z-index:10; display:flex; width:100%; max-width:480px; transform:translateX(-50%); justify-content:space-around; padding:10px 20px 20px; border-top:.5px solid var(--border2); background:rgba(10,10,8,.97); }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; border:0; background:transparent; color:var(--muted); text-decoration:none; }
+.nav-item.active, .nav-item:hover { color:var(--text); }
+.nav-symbol { font-size:15px; line-height:1; }
+.nav-label { font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
 
-/* CARD */
-.deframe-card { border-bottom:0.5px solid var(--border); display:flex; flex-direction:column; }
-
-/* CARD IMAGE */
-.card-img-wrap { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; }
-.card-img { width:100%; height:100%; object-fit:cover; display:block; filter:brightness(0.75); }
-.card-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%); }
-.card-img-meta { position:absolute; bottom:12px; left:14px; right:14px; }
-.card-img-source { font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.6); margin-bottom:5px; display:flex; justify-content:space-between; }
-.card-img-headline { font-family:'EB Garamond',serif; font-size:20px; line-height:1.3; color:#EDEAE2; font-weight:400; }
-
-/* CARD BODY */
-.card-body { padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
-
-/* SCORES */
-.scores-row { display:flex; gap:6px; }
-.score-chip { flex:1; background:var(--surface); border:0.5px solid var(--border); border-radius:6px; padding:8px 4px; display:flex; flex-direction:column; align-items:center; gap:3px; }
-.chip-icon { font-size:11px; }
-.chip-num { font-family:'EB Garamond',serif; font-size:19px; line-height:1; }
-.chip-name { font-size:7.5px; color:var(--muted); letter-spacing:0.04em; text-transform:uppercase; }
-
-/* LENS LAYERS */
-.lens-box { border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:4px; }
-.lens-label { font-size:9px; text-transform:uppercase; letter-spacing:0.1em; }
-.lens-note { font-size:10px; color:var(--muted); font-style:italic; line-height:1.4; }
-.lens-text { font-family:'EB Garamond',serif; font-size:16px; line-height:1.4; color:var(--text); }
-.deframed-box { background:rgba(90,154,106,0.08); border-left:2px solid #5A9A6A; }
-.deframed-box .lens-label { color:#5A9A6A; }
-.reframe-box { background:rgba(138,106,171,0.10); border-left:2px solid #9A8ACB; }
-.reframe-box .lens-label { color:#B5A5E0; }
-.reader-question { background:rgba(255,255,255,0.04); border-left:2px solid var(--border2); border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:4px; }
-.reader-question .lens-label { color:var(--muted); }
-.reader-question .lens-text { font-size:15px; }
-.analysis-details { border-top:0.5px solid var(--border); border-bottom:0.5px solid var(--border); padding:8px 0; }
-.analysis-details summary { color:var(--muted); cursor:pointer; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; list-style:none; }
-.analysis-details summary::-webkit-details-marker { display:none; }
-.analysis-details summary::before { content:'+'; display:inline-block; width:15px; color:var(--text); }
-.analysis-details[open] summary::before { content:'−'; }
-.analysis-details .scores-row { margin-top:8px; }
-.deep-dive { border-top:0.5px solid var(--border); padding-top:8px; }
-.deep-dive-toggle { background:none; border:0; color:var(--muted); cursor:pointer; font-size:10px; letter-spacing:0.08em; padding:0; text-align:left; text-transform:uppercase; }
-.deep-dive-toggle::before { content:'+'; display:inline-block; width:15px; color:var(--text); }
-.deep-dive-toggle[aria-expanded="true"]::before { content:'−'; }
-.deep-dive-body { color:var(--muted); font-size:12px; line-height:1.65; margin-top:9px; white-space:pre-line; }
-.deep-dive-note { color:var(--muted); font-size:9px; font-style:italic; margin-top:7px; opacity:0.75; }
-.deep-dive-signature { color:#D96B2B; font-size:10px; letter-spacing:0.05em; margin-top:10px; text-align:right; }
-
-/* SIGNAL */
-.card-signal { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
-.signal-text { font-size:12px; color:var(--muted); font-style:italic; line-height:1.45; flex:1; }
-.signal-spread { font-family:'EB Garamond',serif; font-size:14px; flex-shrink:0; padding-top:1px; }
-
-/* LEFT ACCENT */
-.card-body { border-left:2px solid var(--cc, #8A3A6A); }
-
-/* ARTICLE PREVIEW */
-.article-preview { border-top:0.5px solid var(--border); padding-top:10px; }
-.article-preview-label { color:var(--muted); font-size:9px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
-.article-preview-text { color:var(--text); font-family:'EB Garamond',serif; font-size:16px; line-height:1.45; }
-.article-preview-link { display:inline-block; color:var(--muted); font-size:10px; margin-top:9px; text-decoration:none; border-bottom:0.5px solid var(--border2); padding-bottom:2px; }
-
-/* ACTIONS */
-.card-actions { display:flex; gap:8px; align-items:center; }
-.action-btn { background:none; border:0.5px solid var(--border2); color:var(--muted); font-size:10px; font-family:'Inter',sans-serif; letter-spacing:0.06em; text-transform:uppercase; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.15s; }
-.action-btn:hover { color:var(--text); border-color:rgba(255,255,255,0.25); }
-.action-btn.done { color:#3A7A4A; border-color:#3A7A4A; }
-.df-tag { font-size:10px; color:var(--muted); opacity:0.35; margin-left:auto; }
-
-/* SKELETON */
-.skel-card { border-bottom:0.5px solid var(--border); }
-.skel-img { width:100%; aspect-ratio:16/9; background:var(--surface); animation:skelanim 1.4s ease-in-out infinite; }
-.skel-body { padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
-.skel { height:12px; border-radius:4px; background:var(--surface2); animation:skelanim 1.4s ease-in-out infinite; }
-@keyframes skelanim { 0%,100%{opacity:0.35} 50%{opacity:0.9} }
-
-/* BOTTOM NAV */
-.bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:var(--bg); border-top:0.5px solid var(--border2); padding:10px 20px 20px; display:flex; justify-content:space-around; z-index:100; }
-.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; }
-.nav-icon { font-size:18px; }
-.nav-label { font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
-.nav-item.active .nav-label { color:var(--text); }
+/* Local admin editor. This is intentionally a lightweight prototype, not auth. */
+.modal-backdrop { position:fixed; inset:0; z-index:20; display:none; align-items:flex-end; justify-content:center; padding:16px; background:rgba(0,0,0,.7); }
+.modal-backdrop.open { display:flex; }
+.modal { width:100%; max-width:480px; max-height:88vh; overflow:auto; padding:20px; border:1px solid var(--border2); border-radius:14px 14px 8px 8px; background:#121210; box-shadow:0 -18px 60px rgba(0,0,0,.4); }
+.modal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.modal h2 { font-family:'EB Garamond',serif; font-size:26px; font-weight:400; }
+.close-btn { border:0; background:transparent; color:var(--muted); font-size:22px; }
+.form-grid { display:grid; gap:11px; }
+.field { display:grid; gap:5px; }
+.field label { color:var(--muted); font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
+.field input, .field textarea, .field select { width:100%; padding:10px 11px; border:1px solid var(--border2); border-radius:7px; outline:none; background:var(--surface); color:var(--text); font-size:13px; }
+.field textarea { min-height:76px; resize:vertical; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color:rgba(255,255,255,.34); }
+.check-field { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:11px; }
+.check-field input { accent-color:var(--accent); }
+.modal-section { padding:18px 0; border-top:.5px solid var(--border); }
+.modal-section h3 { margin-bottom:12px; color:var(--muted); font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+.modal-actions { display:flex; gap:8px; margin-top:15px; }
+.secondary-btn { padding:10px 14px; border:1px solid var(--border2); border-radius:8px; background:transparent; color:var(--muted); font-size:11px; }
+.secondary-btn:hover { color:var(--text); }
+.admin-note { margin-top:14px; color:var(--muted); font-size:10px; line-height:1.5; }
+.toast { position:fixed; right:20px; bottom:82px; left:20px; z-index:30; display:none; padding:10px 12px; border:1px solid var(--border2); border-radius:8px; background:var(--surface2); color:var(--text); font-size:11px; text-align:center; }
+.toast.show { display:block; }
+@media (min-width:700px) { body { margin:20px auto; border:1px solid var(--border); } .bottom-nav { bottom:20px; border:1px solid var(--border2); border-radius:10px; } }
 </style>
 </head>
 <body>
+<div class="shell">
+  <header>
+    <a class="wordmark" href="#top" aria-label="deFramed home">
+      <span class="wm-icon">λ</span><span class="wm-text" id="brand-name">de<span class="brand-f">F</span>ramed</span>
+      <span class="wm-tag" id="brand-tag">windows</span>
+    </a>
+    <div class="header-right"><span class="live-badge"><span class="live-dot"></span><span id="status-label">Live</span></span><button class="admin-link" id="admin-open" type="button">Edit</button></div>
+  </header>
 
-<header>
-  <a class="wordmark" href="#">
-    <span class="wm-icon" style="font-family:'Noto Serif',serif;font-weight:100;font-size:20px;">λ</span>
-    <span class="wm-text">de<span class="brand-f">F</span>ramed</span>
-  </a>
-  <div class="live-badge"><div class="live-dot"></div>Live</div>
-</header>
-
-<div class="tagline">Five intelligences. No frame. Synthesize — don't consume.</div>
-
-<div class="submit-wrap">
-  <input type="text" class="submit-input" id="submit-input" placeholder="Paste any headline — deframe it..." autocomplete="off">
-  <button class="submit-btn" id="submit-btn" onclick="submitHeadline()">λ de<span class="brand-f">F</span>rame</button>
+  <main id="top">
+    <div class="tagline" id="site-tagline">Small windows into what we notice. Synthesize — don't consume.</div>
+    <form class="window-submit" id="quick-add-form"><input class="window-input" id="quick-url" type="url" placeholder="Paste a video — open a window..." autocomplete="off"><button class="window-submit-btn" type="submit">+ Window</button></form>
+    <section class="feed" id="feed" aria-live="polite"></section>
+    <section class="support" id="about">
+      <h2>About the windows</h2>
+      <p><strong>deFramed is a small blog made of windows.</strong><br>Each one is a video, an image, a fragment, or a thought worth leaving open.</p>
+      <p>There is no infinite article pile. Open a window, stay with it for a moment, then move on when you want to.</p>
+      <p>Questions, ideas, or something not working? <a href="mailto:hello@votum.ink">hello@votum.ink</a></p>
+      <div class="footer-mark"><div class="footer-copy"><span id="footer-line-1">λ deFramed</span><span id="footer-line-2">windows into what we notice</span></div><a href="privacy.html">Privacy</a></div>
+    </section>
+  </main>
+  <nav class="bottom-nav" aria-label="Main navigation"><a class="nav-item active" href="#top"><span class="nav-symbol">⌂</span><span class="nav-label">Windows</span></a><a class="nav-item" href="#about"><span class="nav-symbol">?</span><span class="nav-label">About</span></a><button class="nav-item" id="admin-nav" type="button"><span class="nav-symbol">✦</span><span class="nav-label">Create</span></button></nav>
 </div>
 
-<div class="feed" id="feed">
-  <div class="skel-card">
-    <div class="skel-img"></div>
-    <div class="skel-body">
-      <div class="skel" style="width:100%;height:56px"></div>
-      <div class="skel" style="width:60%;animation-delay:0.1s"></div>
-    </div>
-  </div>
-  <div class="skel-card">
-    <div class="skel-img" style="animation-delay:0.1s"></div>
-    <div class="skel-body">
-      <div class="skel" style="width:100%;height:56px;animation-delay:0.1s"></div>
-      <div class="skel" style="width:55%;animation-delay:0.2s"></div>
-    </div>
-  </div>
-</div>
-
-<div id="support" style="padding:24px 20px 32px;border-top:0.5px solid var(--border);">
-  <h2 style="font-family:'EB Garamond',serif;font-size:20px;font-weight:500;margin-bottom:12px;">Support</h2>
-  <p style="font-size:13px;line-height:1.6;color:var(--muted);margin-bottom:14px;">
-    Questions, problems, ideas, or anything not working the way it should — email
-    <a href="mailto:hello@votum.ink" style="color:var(--text);text-decoration:none;border-bottom:0.5px solid var(--border2);">hello@votum.ink</a>
-    and a human will reply, usually within a day or two.
-  </p>
-  <p style="font-size:12px;line-height:1.6;color:var(--muted);margin-bottom:8px;"><strong style="color:var(--text);">Is deFramed free?</strong><br>Yes — every feature, no account, no payment.</p>
-  <p style="font-size:12px;line-height:1.6;color:var(--muted);margin-bottom:8px;"><strong style="color:var(--text);">Do I need to sign up?</strong><br>No. Open it and read. Nothing about you is collected — no account, no tracking, no analytics.</p>
-  <p style="font-size:12px;line-height:1.6;color:var(--muted);margin-bottom:8px;"><strong style="color:var(--text);">How does the analysis work?</strong><br>Each headline is read independently by four analytical intelligences — Claude, ChatGPT, Gemini, and DeepSeek. Each gives its own take on how the story is framed. deFramed adds no facts and takes no side — it shows you the spread. The fifth mind is yours.</p>
-  <p style="font-size:12px;line-height:1.6;color:var(--muted);"><strong style="color:var(--text);">Something looks wrong or broken?</strong><br>Email us — include your device model and what happened, and we'll fix it.</p>
-</div>
-
-<div class="bottom-nav">
-  <a class="nav-item active" href="#">
-    <span class="nav-icon" style="font-family:'Noto Serif',serif;font-weight:100;">λ</span>
-    <span class="nav-label">de<span class="brand-f">F</span>ramed</span>
-  </a>
-  <a class="nav-item" href="https://votum.ink" target="_blank">
-    <span class="nav-icon">🗺</span>
-    <span class="nav-label">Votum.ink</span>
-  </a>
-  <a class="nav-item" href="https://votum.world" target="_blank">
-    <span class="nav-icon">λ</span>
-    <span class="nav-label">Votum.world</span>
-  </a>
-</div>
+<div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-title"><div class="modal">
+  <div class="modal-head"><h2 id="admin-title">Window keeper</h2><button class="close-btn" id="admin-close" type="button" aria-label="Close">×</button></div>
+  <div class="modal-section" style="border-top:0;padding-top:0"><h3>Edit the header</h3><form class="form-grid" id="header-form"><div class="field"><label for="edit-name">Wordmark</label><input id="edit-name" value="deFramed"></div><div class="field"><label for="edit-tag">Small label</label><input id="edit-tag" value="windows"></div><div class="field"><label for="edit-status">Status</label><input id="edit-status" value="Live"></div><div class="field"><label for="edit-tagline">Tagline</label><textarea id="edit-tagline">Small windows into what we notice. Synthesize — don't consume.</textarea></div><h3 class="form-subhead">Edit the footer</h3><div class="field"><label for="edit-footer-line-1">Footer line 1</label><input id="edit-footer-line-1" value="λ deFramed"></div><div class="field"><label for="edit-footer-line-2">Footer line 2</label><input id="edit-footer-line-2" value="windows into what we notice"></div><button class="primary-btn" type="submit">Save header and footer</button></form></div>
+  <div class="modal-section"><h3>Open a new window</h3><form class="form-grid" id="window-form"><div class="field"><label for="window-title">Title</label><input id="window-title" placeholder="A title for this window" required></div><div class="field"><label for="window-caption">Caption</label><textarea id="window-caption" placeholder="A few words to leave beside it"></textarea></div><div class="field"><label for="window-source">Source / byline</label><input id="window-source" placeholder="Your name or the source"></div><div class="field"><label for="window-profile-image">Profile picture URL</label><input id="window-profile-image" type="url" placeholder="https://...jpg or media/profile.jpg"></div><div class="field"><label for="window-profile-file">Or choose a profile picture</label><input id="window-profile-file" type="file" accept="image/*"></div><div class="field"><label for="window-video">Video URL</label><input id="window-video" type="url" placeholder="https://...mp4 or YouTube link"></div><div class="field"><label for="window-file">Or choose a local video</label><input id="window-file" type="file" accept="video/*"></div><label class="check-field"><input id="window-pinned" type="checkbox"> Pin as introduction</label><button class="primary-btn" type="submit">Publish window</button></form></div>
+  <div class="modal-section"><h3>Housekeeping</h3><button class="secondary-btn" id="reset-content" type="button">Restore sample windows</button><p class="admin-note">This is a browser-only preview editor. To publish a window for everyone, add it to <code>content.json</code> and upload any local video into <code>media/</code> on the GoDaddy site.</p></div>
+</div></div>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
-const MM = {
-  Claude:   { icon:'◈', color:'#3A5A8A' },
-  ChatGPT:  { icon:'◯', color:'#3A7A4A' },
-  Gemini:   { icon:'✦', color:'#7A5A2A' },
-  DeepSeek: { icon:'⊕', color:'#8A4A3A' },
-};
-
-const LIVE_FEED_ENDPOINT = 'https://votum.ink/.netlify/functions/universe-feed';
-const DEEP_DIVE_ANALYSTS = ['Claude', 'ChatGPT', 'Gemini', 'DeepSeek'];
-let deepDiveAnalystCursor = 0;
-
-function nextDeepDiveAnalyst(card) {
-  const available = new Set((card?.dataset.analysts || '').split(',').filter(Boolean));
-  for (let step = 0; step < DEEP_DIVE_ANALYSTS.length; step++) {
-    const index = (deepDiveAnalystCursor + step) % DEEP_DIVE_ANALYSTS.length;
-    const analyst = DEEP_DIVE_ANALYSTS[index];
-    if (!available.size || available.has(analyst)) {
-      deepDiveAnalystCursor = (index + 1) % DEEP_DIVE_ANALYSTS.length;
-      return analyst;
-    }
-  }
-  return DEEP_DIVE_ANALYSTS[deepDiveAnalystCursor++ % DEEP_DIVE_ANALYSTS.length];
-}
-
-function sc(s) {
-  if (s >= 70) return '#5A9A6A';
-  if (s >= 50) return '#8A9A6A';
-  if (s >= 35) return '#9A7A4A';
-  return '#B85A5A';
-}
-
-function spreadColor(s) {
-  if (s < 15) return '#3A7A4A';
-  if (s < 30) return '#7A7A4A';
-  if (s < 45) return '#8A4A3A';
-  return '#8A3A6A';
-}
-
-function spreadLabel(s) {
-  if (s < 15) return 'Intelligences converge';
-  if (s < 30) return 'Intelligences mostly agree';
-  if (s < 45) return 'Intelligences debate this';
-  return 'Intelligences diverge — reader decides';
-}
-
-function timeAgo(d) {
-  const diff = Math.floor((Date.now()-new Date(d))/60000);
-  if (diff < 60) return diff+'m ago';
-  if (diff < 1440) return Math.floor(diff/60)+'h ago';
-  return Math.floor(diff/1440)+'d ago';
-}
-
-function escapeHtml(value) {
-  return String(value || '').replace(/[&<>'"]/g, character => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-  }[character]));
-}
-
-function decodeArticleText(value) {
-  return String(value || '')
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;|&apos;/gi, "'")
-    .replace(/\s+/g, ' ');
-}
-
-function deepDiveFor(item, kind) {
-  const explicit = kind === 'deFramed' ? item.deframedDeepDive : item.reframeDeepDive;
-  if (explicit) return explicit;
-
-  if (kind === 'deFramed') {
-    return `${item.deframedHeadline} This version keeps the direct claim while removing the headline's strongest emotional or argumentative packaging. It is not a fact check and it does not establish whether the claim is true. It gives the reader a cleaner object to examine: what happened, who is involved, and what the source is asking the reader to accept. The next step is to compare the wording with the article's evidence, time period, and omitted context.`;
-  }
-
-  return `${item.reframe} This perspective asks what the wording makes most visible and what it leaves outside the frame. It is an analytical reading, not a replacement headline and not a verdict. The purpose is to make the angle easier to notice before the reader decides whether the framing is fair, useful, or persuasive. Where the intelligences disagree, that disagreement belongs in the reading rather than being averaged away.`;
-}
-
-function toggleDeepDive(button, kind) {
-  const body = button.nextElementSibling;
-  if (!body) return;
-  const expanded = button.getAttribute('aria-expanded') === 'true';
-  if (!expanded && !body.dataset.author) {
-    const signature = body.querySelector('.deep-dive-signature');
-    const analyst = nextDeepDiveAnalyst(button.closest('.deframe-card'));
-    body.dataset.author = analyst;
-    if (signature) signature.textContent = `— ${analyst}`;
-  }
-  button.setAttribute('aria-expanded', String(!expanded));
-  body.hidden = expanded;
-  button.textContent = expanded ? `Read full ${kind} analysis` : 'Hide full analysis';
-}
-
-const SEEDS = [
-  {
-    headline: "US economy adds 250,000 jobs — but wage growth slows for third straight month",
-    source: "Reuters",
-    publishedAt: new Date(Date.now()-1800000).toISOString(),
-    image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
-    models: [{model:'Claude',overall:83},{model:'ChatGPT',overall:80},{model:'Gemini',overall:92},{model:'DeepSeek',overall:89}],
-    signal: 'Intelligences converge — credible, well-sourced economic reporting.',
-    spreadVal: 12,
-    deframedHeadline: 'The US economy added 250,000 jobs while wage growth slowed for a third consecutive month.',
-    reframe: 'The wording puts a strong employment gain beside a weaker wage signal, inviting the reader to ask who is benefiting from the growth.',
-    readerQuestion: 'Are the wage figures adjusted for inflation, and which workers are included?',
-  },
-  {
-    headline: "Biden's disastrous border policy has destroyed America",
-    source: "Breitbart",
-    publishedAt: new Date(Date.now()-3600000).toISOString(),
-    image: "https://images.unsplash.com/photo-1569982175971-d92b01cf8694?w=800&q=80",
-    models: [{model:'Claude',overall:16},{model:'ChatGPT',overall:25},{model:'Gemini',overall:10},{model:'DeepSeek',overall:22}],
-    signal: 'The intelligences converge — maximalist framing, zero evidence, advocacy not journalism.',
-    spreadVal: 15,
-    deframedHeadline: 'The headline presents a negative assessment of Biden-era border policy and its effects on the United States.',
-    reframe: 'Words such as “disastrous” and “destroyed” turn a policy disagreement into a totalizing verdict before the reader sees the underlying measures.',
-    readerQuestion: 'Which outcomes and time period are being used to support this conclusion?',
-  },
-  {
-    headline: "Israel commits genocide in Gaza as world looks away",
-    source: "The Intercept",
-    publishedAt: new Date(Date.now()-7200000).toISOString(),
-    image: "https://images.unsplash.com/photo-1647452457953-b9af46774bc5?w=800&q=80",
-    models: [{model:'Claude',overall:30},{model:'ChatGPT',overall:50},{model:'Gemini',overall:23},{model:'DeepSeek',overall:33}],
-    signal: 'Contested legal claim as settled fact. DeepSeek alone rates center-left — divergence is signal.',
-    spreadVal: 27,
-    deframedHeadline: 'The headline says that Israel’s actions in Gaza amount to genocide and describes the wider world as failing to respond.',
-    reframe: 'The headline combines a serious legal classification with a moral accusation, leaving the reader to separate the underlying conduct, the legal standard, and the judgment.',
-    readerQuestion: 'What legal definition and evidence does the article use for the classification?',
-  },
-  {
-    headline: "Republicans block life-saving healthcare for millions of Americans",
-    source: "Unknown",
-    publishedAt: new Date(Date.now()-10800000).toISOString(),
-    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
-    models: [{model:'Claude',overall:20},{model:'ChatGPT',overall:58},{model:'Gemini',overall:45},{model:'DeepSeek',overall:40}],
-    signal: 'Wide spread — Claude flags loaded language. Left perspective, contested framing.',
-    spreadVal: 38,
-    deframedHeadline: 'The headline says that Republican lawmakers blocked healthcare legislation that supporters say would save millions of lives.',
-    reframe: '“Life-saving” and “for millions” present the policy outcome through its supporters’ strongest moral and numerical case, while the opposing rationale is absent.',
-    readerQuestion: 'What provision was blocked, and how was the estimate of lives affected calculated?',
-  },
-  {
-    headline: "Climate change: the greatest hoax ever perpetrated on mankind",
-    source: "Unknown",
-    publishedAt: new Date(Date.now()-14400000).toISOString(),
-    image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
-    models: [{model:'Claude',overall:8},{model:'ChatGPT',overall:12},{model:'Gemini',overall:5},{model:'DeepSeek',overall:18}],
-    signal: 'Near-zero unanimous scores. All five identify science denial with no supporting evidence.',
-    spreadVal: 13,
-    deframedHeadline: 'The headline describes climate change as a deliberately fabricated claim.',
-    reframe: '“Greatest hoax” is a categorical dismissal rather than a description of evidence, so the framing asks the reader to accept the conclusion before examining the record.',
-    readerQuestion: 'What specific evidence is being offered, and how does it address the established measurements?',
-  },
+const STORAGE={settings:'deframed-window-settings-v1',windows:'deframed-windows-v1'};
+const DEFAULT_SETTINGS={name:'deFramed',tag:'windows',status:'Live',tagline:"Small windows into what we notice. Synthesize — don't consume.",footerLine1:'λ deFramed',footerLine2:'windows into what we notice'};
+const query=new URLSearchParams(location.search);
+const previewMode=query.get('preview')==='1'||query.get('admin')==='1'||/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const SAMPLE_WINDOWS=[
+ {id:'sample-1',title:'A little weather inside the room',caption:'A single frame can hold more time than a headline. Stay with the light as it changes.',source:'field note 01',video:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',colors:['#7189A7','#D96B2B'],date:'Introduction',publishedAt:'2026-09-17T08:00:00Z',pinned:true},
+ {id:'sample-2',title:'The world, briefly unframed',caption:'Windows are invitations, not instructions. Look through one. Then look away.',source:'deFramed studio',colors:['#A77D71','#5A9A6A'],date:'Yesterday',publishedAt:'2026-09-16T08:00:00Z'},
+ {id:'sample-3',title:'Something worth keeping open',caption:'A quiet place for moving images, unfinished thoughts, and the things that do not need to become news.',source:'field note 03',colors:['#6D769D','#9A9A68'],date:'Earlier',publishedAt:'2026-09-15T08:00:00Z'}
 ];
-
-function buildCard(item) {
-  const sv = item.spreadVal || 0;
-  const cc = spreadColor(sv);
-  const hasAnalysis = item.models && item.models.length > 0;
-  const div = document.createElement('div');
-  div.className = 'deframe-card';
-  div.dataset.url = item.url || '';
-  div.dataset.headline = item.headline || '';
-  div.dataset.source = item.source || '';
-  div.dataset.analysts = (item.models || [])
-    .filter(m => m && !m.abstained && m.status !== 'abstained')
-    .map(m => m.model)
-    .filter(name => DEEP_DIVE_ANALYSTS.includes(name))
-    .join(',');
-
-  const headlineEsc = (item.headline||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
-  const deframedHeadline = escapeHtml(item.deframedHeadline || '');
-  const reframe = escapeHtml(item.reframe || '');
-  const readerQuestion = escapeHtml(item.readerQuestion || '');
-  const deframedDeepDive = escapeHtml(deepDiveFor(item, 'deFramed'));
-  const reframeDeepDive = escapeHtml(deepDiveFor(item, 'reFrame'));
-
-  div.innerHTML = `
-    <div class="card-img-wrap">
-      <img class="card-img" src="${item.image||''}" alt="" loading="lazy"
-        onerror="this.parentElement.style.display='none'">
-      <div class="card-img-overlay"></div>
-      <div class="card-img-meta">
-        <div class="card-img-source">
-          <span>${item.source||'Unknown'}</span>
-          <span>${timeAgo(item.publishedAt)}</span>
-        </div>
-        <div class="card-img-headline">${item.headline||''}</div>
-      </div>
-    </div>
-    <div class="card-body" style="--cc:${cc}">
-      ${item.url ? `
-        <button class="action-btn" style="align-self:flex-start;" onclick="loadArticle(this)">Load article</button>
-        <div class="article-preview" hidden></div>
-      ` : ''}
-      ${!hasAnalysis ? `
-        <button class="action-btn" style="width:100%;justify-content:center;padding:10px;"
-          onclick="deframeCard(this)">λ de<span class="brand-f">F</span>rame this</button>
-      ` : `
-        <details class="analysis-details">
-          <summary>View intelligence readings</summary>
-          <div class="scores-row">
-            ${(item.models||[]).map(m=>{
-              const meta = MM[m.model]||{icon:'·',color:'#888'};
-              return `<div class="score-chip">
-                <span class="chip-icon" style="color:${meta.color}">${meta.icon}</span>
-                <span class="chip-num" style="color:${sc(m.overall)}">${m.overall}</span>
-                <span class="chip-name">${m.model.replace('ChatGPT','GPT').replace('DeepSeek','DS')}</span>
-              </div>`;
-            }).join('')}
-          </div>
-        </details>
-        ${(item.models||[]).map(m => {
-          const meta = MM[m.model]||{icon:'·',color:'#888'};
-          if (!m.reasoning) return '';
-          return `<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:4px;">
-            <span style="font-size:10px;color:${meta.color};margin-top:2px;flex-shrink:0;">${meta.icon}</span>
-            <span style="font-size:11px;color:var(--muted);font-style:italic;line-height:1.5;">${m.reasoning}</span>
-          </div>`;
-        }).join('')}
-        ${deframedHeadline ? `
-          <div class="lens-box deframed-box">
-            <div class="lens-label">λ de<span class="brand-f">F</span>ramed</div>
-            <div class="lens-note">The lens removed — a plain rendering of the claim.</div>
-            <div class="lens-text">${deframedHeadline}</div>
-            <div class="deep-dive">
-              <button class="deep-dive-toggle" aria-expanded="false" onclick="toggleDeepDive(this,'deFramed')">Read full deFramed analysis</button>
-              <div class="deep-dive-body" hidden>${deframedDeepDive}<div class="deep-dive-signature"></div></div>
-              <div class="deep-dive-note">On-demand deep dive · up to 400 words.</div>
-            </div>
-          </div>
-        ` : ''}
-        ${reframe ? `
-          <div class="lens-box reframe-box">
-            <div class="lens-label">λ reFrame</div>
-            <div class="lens-note">Analytical perspective, not a verdict.</div>
-            <div class="lens-text">${reframe}</div>
-            <div class="deep-dive">
-              <button class="deep-dive-toggle" aria-expanded="false" onclick="toggleDeepDive(this,'reFrame')">Read full reFrame analysis</button>
-              <div class="deep-dive-body" hidden>${reframeDeepDive}<div class="deep-dive-signature"></div></div>
-              <div class="deep-dive-note">On-demand deep dive · up to 400 words.</div>
-            </div>
-          </div>
-        ` : ''}
-        ${readerQuestion ? `
-          <div class="reader-question">
-            <div class="lens-label">? Reader question</div>
-            <div class="lens-text">${readerQuestion}</div>
-          </div>
-        ` : ''}
-        <div class="card-signal">
-          <div class="signal-text">${escapeHtml(item.signal||spreadLabel(sv))}</div>
-          <div class="signal-spread" style="color:${cc}">${spreadLabel(sv)}</div>
-        </div>
-      `}
-      <div class="card-actions">
-        <button class="action-btn" onclick="shareCard(this,'${headlineEsc}',${sv},event)">Share</button>
-        <button class="action-btn" onclick="copyCard(this,'${headlineEsc}',${sv},event)">Copy</button>
-        <span class="df-tag">deframed.net</span>
-      </div>
-    </div>
-  `;
-  return div;
-}
-
-async function loadArticle(btn) {
-  const card = btn.closest('.deframe-card');
-  const preview = card.querySelector('.article-preview');
-  const url = card.dataset.url;
-  if (!preview || !url) return;
-
-  if (preview.dataset.loaded === 'true') {
-    preview.hidden = !preview.hidden;
-    btn.textContent = preview.hidden ? 'Load article' : 'Hide article';
-    return;
-  }
-
-  btn.textContent = 'Loading article...';
-  btn.disabled = true;
-  try {
-    const response = await fetch('https://votum.ink/.netlify/functions/fetch-article', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
-    });
-    const data = await response.json();
-    const bodyText = decodeArticleText(data.bodyText).trim();
-    if (!bodyText) throw new Error('No article text returned');
-
-    const excerpt = bodyText.length > 1800 ? `${bodyText.slice(0, 1800).trim()}…` : bodyText;
-    card.dataset.articleText = bodyText;
-    preview.innerHTML = `
-      <div class="article-preview-label">Loaded article text · ${escapeHtml(card.dataset.source)}</div>
-      <div class="article-preview-text">${escapeHtml(excerpt)}</div>
-      <a class="article-preview-link" href="${escapeHtml(url)}" target="_blank" rel="noopener">Open publisher ↗</a>
-    `;
-    preview.dataset.loaded = 'true';
-    preview.hidden = false;
-    btn.textContent = 'Hide article';
-  } catch (error) {
-    btn.textContent = 'Could not load article';
-    setTimeout(() => {
-      btn.textContent = 'Load article';
-      btn.disabled = false;
-    }, 1800);
-    return;
-  }
-  btn.disabled = false;
-}
-
-async function deframeCard(btn) {
-  const card = btn.closest('.deframe-card');
-  const headline = card.dataset.headline;
-  const url = card.dataset.url;
-  const source = card.dataset.source;
-
-  btn.textContent = 'Deframing...';
-  btn.disabled = true;
-
-  try {
-    let title = headline;
-    let description = card.dataset.articleText || '';
-
-    // Fetch article content if URL available
-    if (url && !description) {
-      try {
-        const fetchRes = await fetch('https://votum.ink/.netlify/functions/fetch-article', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url }),
-        });
-        const fetchData = await fetchRes.json();
-        if (fetchData.bodyText) description = fetchData.bodyText;
-        if (fetchData.title) title = fetchData.title;
-      } catch(e) {}
-    }
-
-    const res = await fetch('https://votum.ink/.netlify/functions/analyze-multi', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description, source }),
-    });
-    const data = await res.json();
-
-    if (data.models?.length) {
-      const overalls = data.models.map(m => m.overall);
-      const sv = Math.max(...overalls) - Math.min(...overalls);
-      const newCard = buildCard({
-        id: url || headline,
-        headline: title,
-        source,
-        url,
-        publishedAt: new Date().toISOString(),
-        image: card.querySelector('.card-img')?.src || null,
-        models: data.models,
-        signal: data.spread?.desc || spreadLabel(sv),
-        spreadVal: sv,
-      });
-      card.replaceWith(newCard);
-    }
-  } catch(e) {
-    btn.innerHTML = 'λ de<span class="brand-f">F</span>rame this';
-    btn.disabled = false;
+let settings={...DEFAULT_SETTINGS};
+let windows=SAMPLE_WINDOWS.map(item=>({...item}));
+function readJson(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}}
+function saveJson(key,value){localStorage.setItem(key,JSON.stringify(value));}
+async function loadContent(){
+  try{
+    const response=await fetch(`content.json?ts=${Date.now()}`,{cache:'no-store'});
+    if(!response.ok)throw new Error(`content.json returned ${response.status}`);
+    const content=await response.json();
+    const publicSettings={...DEFAULT_SETTINGS,...(content.settings||{})};
+    const publicWindows=Array.isArray(content.windows)?content.windows:SAMPLE_WINDOWS;
+    settings=previewMode?{...publicSettings,...readJson(STORAGE.settings,{})}:publicSettings;
+    windows=previewMode?readJson(STORAGE.windows,publicWindows):publicWindows;
+  }catch(error){
+    settings=previewMode?{...DEFAULT_SETTINGS,...readJson(STORAGE.settings,{})}:DEFAULT_SETTINGS;
+    windows=previewMode?readJson(STORAGE.windows,SAMPLE_WINDOWS):SAMPLE_WINDOWS.map(item=>({...item}));
+    console.warn('Using built-in content fallback:',error);
   }
 }
-
-function shareCard(btn, headline, spread, e) {
-  e.stopPropagation();
-  const text = `"${headline}"\n\nRead by four analytical intelligences — spread ±${spread}\nThe fifth mind is yours.\ndeframed.net`;
-  if (navigator.share) {
-    navigator.share({ title:'deFramed', text, url:'https://deframed.net' });
-  } else {
-    navigator.clipboard.writeText(text).then(()=>{
-      btn.textContent='Shared ✓'; btn.classList.add('done');
-      setTimeout(()=>{ btn.textContent='Share'; btn.classList.remove('done'); },2000);
-    });
-  }
-}
-
-function copyCard(btn, headline, spread, e) {
-  e.stopPropagation();
-  const text = `"${headline}"\n\nRead by four analytical intelligences — spread ±${spread}\nThe fifth mind is yours.\ndeframed.net`;
-  navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent='Copied ✓'; btn.classList.add('done');
-    setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('done'); },2000);
-  });
-}
-
-async function submitHeadline() {
-  const input = document.getElementById('submit-input');
-  const btn = document.getElementById('submit-btn');
-  const headline = input.value.trim();
-  if (!headline) return;
-
-  btn.disabled = true;
-  btn.textContent = 'Deframing...';
-
-  const feed = document.getElementById('feed');
-  const loadCard = document.createElement('div');
-  loadCard.className = 'skel-card';
-  loadCard.innerHTML = `
-    <div class="skel-img"></div>
-    <div class="skel-body">
-      <div style="font-family:'EB Garamond',serif;font-size:15px;color:var(--muted);padding-bottom:4px;">${headline}</div>
-      <div class="skel" style="height:56px"></div>
-      <div class="skel" style="width:60%;animation-delay:0.1s"></div>
-    </div>
-  `;
-  feed.insertBefore(loadCard, feed.firstChild);
-
-  try {
-    const res = await fetch('/.netlify/functions/analyze-multi', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ title:headline, source:'User submitted', description:'' })
-    });
-    const data = await res.json();
-    loadCard.remove();
-
-    if (data.models?.length) {
-      const overalls = data.models.map(m=>m.overall);
-      const sv = Math.max(...overalls)-Math.min(...overalls);
-      const item = {
-        headline,
-        source: 'deFramed',
-        publishedAt: new Date().toISOString(),
-        image: `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80`,
-        models: data.models,
-        signal: data.spread?.desc || spreadLabel(sv),
-        spreadVal: sv,
-      };
-      feed.insertBefore(buildCard(item), feed.firstChild);
-      input.value = '';
-    }
-  } catch(err) {
-    loadCard.remove();
-  }
-
-  btn.disabled = false;
-  btn.innerHTML = 'λ de<span class="brand-f">F</span>rame';
-}
-
-document.getElementById('submit-input').addEventListener('keydown', e => {
-  if (e.key==='Enter') submitHeadline();
-});
-
-// Load pre-analyzed feed — instant scores for everyone
-async function loadLiveFeed() {
-  try {
-    const res = await fetch(LIVE_FEED_ENDPOINT);
-    const data = await res.json();
-    if (data.articles?.length) {
-      feed.innerHTML = '';
-      data.articles.forEach(article => {
-        feed.appendChild(buildCard({
-          ...article,
-          // Universe articles arrive unscored; the existing card keeps the
-          // deFrame action available so analysis remains user-triggered.
-          headline: article.headline || article.title,
-          publishedAt: article.publishedAt || article.pubDate,
-          models: article.models || [],
-          spreadVal: article.spreadVal || 0,
-        }));
-      });
-      return;
-    }
-  } catch(e) {}
-  // Fall back to seeds
-  SEEDS.forEach(s => feed.appendChild(buildCard(s)));
-}
-
-// Render seeds
-const feed = document.getElementById('feed');
-feed.innerHTML = '';
-SEEDS.forEach(s => feed.appendChild(buildCard(s)));
-loadLiveFeed();
+function esc(value=''){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function showToast(message){const toast=document.getElementById('toast');toast.textContent=message;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),2200);}
+function isYouTube(url=''){return /(?:youtube\.com\/watch\?v=|youtu\.be\/)/i.test(url);}
+function youtubeEmbed(url=''){const match=url.match(/(?:v=|youtu\.be\/)([^&?/]+)/i);return match?`https://www.youtube.com/embed/${match[1]}`:'';}
+function isTikTok(url=''){return /(?:tiktok\.com\/@[^/]+\/video\/\d+|tiktok\.com\/player\/v1\/\d+)/i.test(url);}
+function tiktokEmbed(url=''){const match=url.match(/(?:\/video\/|\/player\/v1\/)(\d+)/i);return match?`https://www.tiktok.com/player/v1/${match[1]}?controls=1&description=1&music_info=1`:'';}
+function brandMarkup(name='deFramed'){const safe=esc(name);const index=safe.search(/f/i);return index<0?safe:`${safe.slice(0,index)}<span class="brand-f">${safe[index]}</span>${safe.slice(index+1)}`;}
+function applySettings(){document.title=`${settings.name} — windows into what we notice`;document.getElementById('brand-name').innerHTML=brandMarkup(settings.name);document.getElementById('brand-tag').textContent=settings.tag;document.getElementById('status-label').textContent=settings.status;document.getElementById('site-tagline').textContent=settings.tagline;document.getElementById('footer-line-1').textContent=settings.footerLine1;document.getElementById('footer-line-2').textContent=settings.footerLine2;document.getElementById('edit-name').value=settings.name;document.getElementById('edit-tag').value=settings.tag;document.getElementById('edit-status').value=settings.status;document.getElementById('edit-tagline').value=settings.tagline;document.getElementById('edit-footer-line-1').value=settings.footerLine1;document.getElementById('edit-footer-line-2').value=settings.footerLine2;}
+function frameMarkup(item){if(item.video&&isYouTube(item.video))return `<iframe src="${esc(youtubeEmbed(item.video))}" title="${esc(item.title)}" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;if(item.video&&isTikTok(item.video))return `<iframe src="${esc(tiktokEmbed(item.video))}" title="${esc(item.title)}" loading="lazy" allow="fullscreen" allowfullscreen></iframe>`;if(item.video)return `<video src="${esc(item.video)}" controls playsinline preload="metadata"></video>`;const colors=item.colors||['#7189A7','#D96B2B'];return `<div class="frame-art" style="--frame-a:${esc(colors[0])};--frame-b:${esc(colors[1])}"><span class="frame-line"></span><span class="frame-label">window</span></div><span class="play-mark" aria-hidden="true">▶</span>`;}
+function initials(value='deFramed'){return value.trim().split(/\s+/).filter(Boolean).slice(0,2).map(part=>part[0]).join('').toUpperCase()||'λ';}
+function avatarMarkup(item){return item.profileImage?`<span class="profile-avatar"><img src="${esc(item.profileImage)}" alt=""></span>`:`<span class="profile-avatar">${esc(initials(item.source||'deFramed'))}</span>`;}
+function cardMarkup(item,isPinned=false){return `<article class="window-card${isPinned?' pinned-card':''}" data-id="${esc(item.id)}"><div class="window-meta"><span>${esc(isPinned?'Pinned introduction':item.date||'Now')}</span><div class="window-byline">${avatarMarkup(item)}<span>${esc(item.source||'deFramed')}</span></div></div><div class="window-frame">${frameMarkup(item)}</div><h2 class="window-title">${esc(item.title)}</h2><p class="window-caption">${esc(item.caption||'')}</p><div class="window-footer"><div class="window-actions"><button class="action-btn share-btn" type="button">Share</button><button class="action-btn copy-btn" type="button">Copy</button></div><span class="window-source">${esc(item.source||'deFramed')}</span></div></article>`;}
+function render(){const feed=document.getElementById('feed');const pinned=windows.find(item=>item.pinned);const dated=windows.filter(item=>!item.pinned).sort((a,b)=>new Date(b.publishedAt||0)-new Date(a.publishedAt||0));feed.innerHTML=windows.length?`${pinned?cardMarkup(pinned,true):''}${dated.map(item=>cardMarkup(item)).join('')}`:'<div class="empty-state">No windows yet.<br>Open the editor and leave the first one ajar.</div>';feed.querySelectorAll('.share-btn').forEach(button=>button.addEventListener('click',()=>shareWindow(button.closest('.window-card'))));feed.querySelectorAll('.copy-btn').forEach(button=>button.addEventListener('click',()=>copyWindow(button.closest('.window-card'))));}
+function cardData(card){return windows.find(item=>item.id===card.dataset.id)||{};}
+async function shareWindow(card){const item=cardData(card);const text=`${item.title}\n\n${item.caption||''}\n\n${settings.name}`;if(navigator.share)await navigator.share({title:item.title,text,url:location.href});else{await navigator.clipboard.writeText(text);showToast('Window copied');}}
+async function copyWindow(card){const item=cardData(card);await navigator.clipboard.writeText(`${item.title}\n\n${item.caption||''}\n\n${settings.name}`);showToast('Window copied');}
+function openAdmin(){document.getElementById('admin-modal').classList.add('open');document.body.style.overflow='hidden';applySettings();}
+function closeAdmin(){document.getElementById('admin-modal').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('admin-open').addEventListener('click',openAdmin);document.getElementById('admin-nav').addEventListener('click',openAdmin);document.getElementById('admin-close').addEventListener('click',closeAdmin);document.getElementById('admin-modal').addEventListener('click',event=>{if(event.target.id==='admin-modal')closeAdmin();});
+document.getElementById('header-form').addEventListener('submit',event=>{event.preventDefault();settings={name:document.getElementById('edit-name').value.trim()||'deFramed',tag:document.getElementById('edit-tag').value.trim()||'windows',status:document.getElementById('edit-status').value.trim()||'Live',tagline:document.getElementById('edit-tagline').value.trim()||settings.tagline,footerLine1:document.getElementById('edit-footer-line-1').value.trim()||'λ deFramed',footerLine2:document.getElementById('edit-footer-line-2').value.trim()||'windows into what we notice'};saveJson(STORAGE.settings,settings);applySettings();showToast('Header and footer saved');});
+document.getElementById('window-form').addEventListener('submit',event=>{event.preventDefault();const file=document.getElementById('window-file').files[0];const profileFile=document.getElementById('window-profile-file').files[0];const url=document.getElementById('window-video').value.trim();const profileUrl=document.getElementById('window-profile-image').value.trim();const objectUrl=file?URL.createObjectURL(file):'';const profileObjectUrl=profileFile?URL.createObjectURL(profileFile):'';const item={id:`window-${Date.now()}`,title:document.getElementById('window-title').value.trim(),caption:document.getElementById('window-caption').value.trim(),source:document.getElementById('window-source').value.trim()||'you',profileImage:profileObjectUrl||profileUrl,video:objectUrl||url,date:'Just now',publishedAt:new Date().toISOString(),pinned:document.getElementById('window-pinned').checked,colors:['#7189A7','#D96B2B']};if(!item.title||(!item.video&&!item.caption))return showToast('Add a title and video, caption, or both');windows=[item,...windows];saveJson(STORAGE.windows,windows);render();event.target.reset();closeAdmin();showToast(item.pinned?'Pinned introduction opened':'Window opened');});
+document.getElementById('reset-content').addEventListener('click',()=>{windows=SAMPLE_WINDOWS.map(item=>({...item}));saveJson(STORAGE.windows,windows);render();showToast('Sample windows restored');});
+document.getElementById('quick-add-form').addEventListener('submit',event=>{event.preventDefault();const url=document.getElementById('quick-url').value.trim();openAdmin();if(url)document.getElementById('window-video').value=url;});
+(async()=>{await loadContent();applySettings();render();if(query.get('admin')==='1')openAdmin();})();
 </script>
 </body>
 </html>
